@@ -1,4 +1,15 @@
 apiVersion: tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: listener
+spec:
+  triggers:
+    - binding:
+        name: theTriggerBinding
+      template:
+        name: theTemplateTrigger
+---
+apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: theTemplateTrigger
@@ -50,22 +61,11 @@ spec:
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: binding
+  name: theTriggerBinding
 spec:
   params:
     - name: repository
       value: "https://github.com/powellquiring/tekton"
----
-apiVersion: tekton.dev/v1alpha1
-kind: EventListener
-metadata:
-  name: listener
-spec:
-  triggers:
-    - binding:
-        name: binding
-      template:
-        name: theTemplateTrigger
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -78,7 +78,7 @@ spec:
       command:
         - echo
       args:
-        - "8 hello world tekton"
+        - "9 hello world tekton"
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TaskRun
