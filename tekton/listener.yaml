@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: template
+  name: theTemplateTrigger
 spec:
 #  params:
 #    - name: repository
@@ -65,7 +65,7 @@ spec:
     - binding:
         name: binding
       template:
-        name: template
+        name: theTemplateTrigger
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -78,5 +78,22 @@ spec:
       command:
         - echo
       args:
-        - "7 hello world tekton"
-
+        - "8 hello world tekton"
+---
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: echo-hello-world-task-run
+spec:
+  taskRef:
+    name: echo-hello-world
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: pipeline
+spec:
+  tasks:
+    - name: pipeline-echo-hello-world
+      taskRef:
+        name: echo-hello-world
