@@ -3,24 +3,24 @@ kind: TriggerTemplate
 metadata:
   name: template
 spec:
-  params:
-    - name: repository
-      description: The git repo
-    - name: apikey
-      description: the ibmcloud api key
-    - name: registryNamespace
-      description: the ibmcloud registry namespace
-    - name: registryRegion
-      description: the ibmcloud registry region
-      default: us-south
-    - name: cluster
-      description: The IBM Cloud Kubernetes cluster name
-    - name: clusterRegion
-      description: The IBM Cloud Kubernetes cluster region
-      default: us-south
-    - name: clusterNamespace
-      description: The Kubernetes cluster namespace
-      default: prod
+#  params:
+#    - name: repository
+#      description: The git repo
+#    - name: apikey
+#      description: the ibmcloud api key
+#    - name: registryNamespace
+#      description: the ibmcloud registry namespace
+#    - name: registryRegion
+#      description: the ibmcloud registry region
+#      default: us-south
+#    - name: cluster
+#      description: The IBM Cloud Kubernetes cluster name
+#    - name: clusterRegion
+#      description: The IBM Cloud Kubernetes cluster region
+#      default: us-south
+#    - name: clusterNamespace
+#      description: The Kubernetes cluster namespace
+#      default: prod
   resourcetemplates:
     - apiVersion: tekton.dev/v1alpha1
       kind: PipelineRun
@@ -29,23 +29,23 @@ spec:
       spec:
         pipelineRef:
             name: pipeline
-        params:
-        - name: pipeline-pvc
-          value: pipelinerun-$(uid)-pvc
-        - name: repository
-          value: $(params.repository)
-        - name: apikey
-          value: $(params.apikey)
-        - name: registryNamespace
-          value: $(params.registryNamespace)
-        - name: registryRegion
-          value: $(params.registryRegion)
-        - name: cluster
-          value: $(params.cluster)
-        - name: clusterRegion
-          value: $(params.clusterRegion)
-        - name: clusterNamespace
-          value: $(params.clusterNamespace)
+#        params:
+#        - name: pipeline-pvc
+#          value: pipelinerun-$(uid)-pvc
+#        - name: repository
+#          value: $(params.repository)
+#        - name: apikey
+#          value: $(params.apikey)
+#        - name: registryNamespace
+#          value: $(params.registryNamespace)
+#        - name: registryRegion
+#          value: $(params.registryRegion)
+#        - name: cluster
+#          value: $(params.cluster)
+#        - name: clusterRegion
+#          value: $(params.clusterRegion)
+#        - name: clusterNamespace
+#          value: $(params.clusterNamespace)
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
