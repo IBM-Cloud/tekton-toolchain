@@ -39,7 +39,7 @@ spec:
         name: pipelinerun-$(uid)
       spec:
         pipelineRef:
-            name: thePipeline
+            name: pipeline
 #        params:
 #        - name: pipeline-pvc
 #          value: pipelinerun-$(uid)-pvc
@@ -70,7 +70,7 @@ spec:
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: theTask
+  name: echo-hello-world
 spec:
   steps:
     - name: echo
@@ -78,7 +78,7 @@ spec:
       command:
         - echo
       args:
-        - "10 hello world tekton"
+        - "9 hello world tekton"
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TaskRun
@@ -86,14 +86,14 @@ metadata:
   name: echo-hello-world-task-run
 spec:
   taskRef:
-    name: theTask
+    name: echo-hello-world
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: thePipeline
+  name: pipeline
 spec:
   tasks:
-    - name: pipelineTheTask
+    - name: pipeline-echo-hello-world
       taskRef:
-        name: theTask
+        name: echo-hello-world
