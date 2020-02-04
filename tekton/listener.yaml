@@ -66,4 +66,17 @@ spec:
         name: binding
       template:
         name: template
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: echo-hello-world
+spec:
+  steps:
+    - name: echo
+      image: ubuntu
+      command:
+        - echo
+      args:
+        - "7 hello world tekton"
 
