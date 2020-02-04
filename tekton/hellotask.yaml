@@ -9,5 +9,5 @@ spec:
       command:
         - echo
       args:
-        - "hello world 3"
+        - "4 hello world tekton"
 
