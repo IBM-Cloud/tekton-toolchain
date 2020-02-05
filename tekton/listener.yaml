@@ -70,7 +70,7 @@ spec:
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: echo-hello-world
+  name: theTask
 spec:
   steps:
     - name: echo
@@ -78,7 +78,7 @@ spec:
       command:
         - echo
       args:
-        - "9 hello world tekton"
+        - "11 hello world tekton"
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TaskRun
@@ -86,7 +86,7 @@ metadata:
   name: echo-hello-world-task-run
 spec:
   taskRef:
-    name: echo-hello-world
+    name: theTask
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
@@ -96,4 +96,4 @@ spec:
   tasks:
     - name: pipeline-echo-hello-world
       taskRef:
-        name: echo-hello-world
+        name: theTask
