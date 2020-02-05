@@ -78,15 +78,7 @@ spec:
       command:
         - echo
       args:
-        - "12 hello world tekton"
----
-apiVersion: tekton.dev/v1alpha1
-kind: TaskRun
-metadata:
-  name: xx-task-run
-spec:
-  taskRef:
-    name: xx
+        - "13 hello world tekton"
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
