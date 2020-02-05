@@ -78,7 +78,7 @@ spec:
       command:
         - echo
       args:
-        - "14 hello world tekton"
+        - "16 hello world tekton"
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
@@ -87,6 +87,6 @@ metadata:
 spec:
   tasks:
     #- name: pipeline-xx
-    - name: thePipeline
+    - name: the-pipeline
       taskRef:
         name: xx
