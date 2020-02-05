@@ -75,17 +75,36 @@ spec:
   tasks:
     - name: xx1
       taskRef:
-        name: xx
+        name: the-task
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: xx
+  name: the-task
 spec:
   steps:
-    - name: echo
+    - name: lslslash
       image: ubuntu
       command:
-        - echo
+        - ls
       args:
-        - "18 hello world tekton"
+        - "-l"
+        - "/"
+    - name: lsl-ubuntu
+      image: ubuntu
+      command:
+        - ls
+      args:
+        - "-l"
+    - name: pwd
+      image: ubuntu
+      command:
+        - pwd
+    - name: ls
+      image: ubuntu
+      command:
+        - ls
+    - name: env
+      image: ubuntu
+      command:
+        - env
