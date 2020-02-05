@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: listener
+  name: the-listener
 spec:
   triggers:
     - binding:
@@ -88,4 +88,4 @@ spec:
       command:
         - echo
       args:
-        - "17 hello world tekton"
+        - "18 hello world tekton"
