@@ -10,6 +10,15 @@ spec:
         name: theTemplateTrigger
 ---
 apiVersion: tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: theTriggerBinding
+spec:
+  params:
+    - name: repository
+      value: "https://github.com/powellquiring/tekton"
+---
+apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: theTemplateTrigger
@@ -59,13 +68,14 @@ spec:
 #          value: $(params.clusterNamespace)
 ---
 apiVersion: tekton.dev/v1alpha1
-kind: TriggerBinding
+kind: Pipeline
 metadata:
-  name: theTriggerBinding
+  name: pipeline
 spec:
-  params:
-    - name: repository
-      value: "https://github.com/powellquiring/tekton"
+  tasks:
+    - name: xx1
+      taskRef:
+        name: xx
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -78,15 +88,4 @@ spec:
       command:
         - echo
       args:
-        - "16 hello world tekton"
----
-apiVersion: tekton.dev/v1alpha1
-kind: Pipeline
-metadata:
-  name: pipeline
-spec:
-  tasks:
-    #- name: pipeline-xx
-    - name: the-pipeline
-      taskRef:
-        name: xx
+        - "17 hello world tekton"
