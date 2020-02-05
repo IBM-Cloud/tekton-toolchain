@@ -13,10 +13,10 @@ apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
   name: theTriggerBinding
-spec:
-  params:
-    - name: repository
-      value: "https://github.com/powellquiring/tekton"
+#spec:
+#  params:
+#    - name: repository
+#      value: "https://github.com/powellquiring/tekton"
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
