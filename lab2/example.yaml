@@ -49,7 +49,7 @@ spec:
       command:
         - echo
       args:
-        - "01 version"
+        - "01 lab2"
     - name: lslslash
       image: ubuntu
       command:
