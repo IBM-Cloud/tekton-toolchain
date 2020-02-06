@@ -13,16 +13,18 @@ The tekton pipeline will be triggered automatically when your fork is changed.  
 
 ```
       args:
-        - "01 lab2"
+        - "-c"
+        - "echo 01 lab2 env VAR: $VAR"
 ```
 to
 ```
       args:
-        - "02 lab2"
+        - "-c"
+        - "echo 02 lab2 env VAR: $VAR"
 ```
-You can do this in the github web site.  Just hit the pencil and start editing.
+You can even do this in the github web site.  Just hit the pencil and start editing.
 
-Open the `Delivery Pipeline` and in a few moments a new pipeline run will appear.
+Open the `Delivery Pipeline` and in a few moments a new pipeline run will appear.  Open the log and verify the change.
 
 ## Run a shell script
 
