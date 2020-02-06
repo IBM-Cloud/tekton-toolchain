@@ -19,6 +19,9 @@ kind: TriggerTemplate
 metadata:
   name: theTemplateTrigger
 spec:
+  #params:
+  #  - name: var
+  #    description: var example
   resourcetemplates:
     - apiVersion: tekton.dev/v1alpha1
       kind: PipelineRun
@@ -26,72 +29,51 @@ spec:
         name: pipelinerun-$(uid)
       spec:
         pipelineRef:
-            name: pipeline
+          name: pipeline
+  #      params:
+  #        - name: var
+  #          value: $(params.var)
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
   name: pipeline
 spec:
+  #params:
+  #  - name: var
+  #    description: var example in pipeline
   tasks:
     - name: xx1
+  #    params:
+  #      - name: var
+  #        value: $(params.var)
       taskRef:
-        name: the-task
+        name: the-var-task
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: the-task
+  name: the-var-task
 spec:
+  inputs:
+    params:
+      - name: var
+        description: var example in task
+        default: VALUE
   steps:
-    - name: echo
+    - name: echoenvvar
       image: ubuntu
-      command:
-        - echo
-      args:
-        - "01 lab2"
-    - name: lslslash
-      image: ubuntu
-      command:
-        - ls
-      args:
-        - "-l"
-        - "/"
-    - name: lsl-ubuntu
-      image: ubuntu
-      command:
-        - ls
-      args:
-        - "-l"
-    - name: pwd
-      image: ubuntu
-      command:
-        - pwd
-    - name: ls
-      image: ubuntu
-      command:
-        - ls
-    - name: env
-      image: ubuntu
-      command:
-        - env
-    - name: write
-      image: ubuntu
+      env:
+        - name: VAR
+          value: $(inputs.params.var)
       command:
         - "/bin/bash"
       args:
         - "-c"
-        - "echo stuff > file; ls; cat file"
-    - name: lsafter
+        - "echo 01 lab2 env VAR: $VAR"
+    - name: echovar
       image: ubuntu
       command:
-        - ls
+        - /bin/echo
       args:
-        - "-l"
-    - name: catafter
-      image: ubuntu
-      command:
-        - cat
-      args:
-        - file
-
+        - $(inputs.params.var)
