@@ -75,3 +75,22 @@ spec:
       image: ubuntu
       command:
         - env
+    - name: write
+      image: ubuntu
+      command:
+        - "/bin/bash"
+      args:
+        - "-c"
+        - "echo stuff > file; ls; cat file"
+    - name: lsafter
+      image: ubuntu
+      command:
+        - ls
+      args:
+        - "-l"
+    - name: catafter
+      image: ubuntu
+      command:
+        - cat
+      args:
+        - file
