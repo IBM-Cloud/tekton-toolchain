@@ -64,5 +64,6 @@ spec:
         - "echo env VAR: $VAR"
 ```
 
+But how do I get parameters to the task?
 Open the Delivery Pipeline, click `Configure Pipeline` and in the `Definitions` tab choose `Add`, Repository: tekton-catalog, Branch
 

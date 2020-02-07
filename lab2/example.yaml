@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: the-listener
+  name: simple-parameter
 spec:
   triggers:
     - binding:
