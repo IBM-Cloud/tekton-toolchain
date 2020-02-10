@@ -191,7 +191,7 @@ spec:
         name: secret-slot
       type: Opaque
       stringData:
-        API_KEY2: $(params.apikey)
+        slot_key: $(params.apikey)
     - apiVersion: tekton.dev/v1alpha1
       kind: PipelineRun
       metadata:
@@ -227,10 +227,10 @@ spec:
           valueFrom:
             secretKeyRef:
               name: secret-slot
-              key: API_KEY2
+              key: slot_key
       command:
         - "/bin/bash"
       args:
         - "-c"
-        - "echo 02 lab2 secret in secret-slot key2 VAR: $API_KEY"
+        - "echo 03 lab2 secret in secret-slot slot_key VAR: $API_KEY; sleep 300; echo done"
 
