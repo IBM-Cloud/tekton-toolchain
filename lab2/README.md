@@ -95,13 +95,14 @@ spec:
         - "echo env VAR: $VAR"
 ```
 
-This explains the output from pipeline-no-variable
+This explains the output from the pipeline-no-variable
 ```
 [xx1 : echoenvvar] 01 lab2 env VAR: VALUE
 
 [xx1 : echovar] VALUE
 ```
 
+## Parameters from a pipeline to a task
 But how do I get parameters to the task? In the pipeline:
 ```
 apiVersion: tekton.dev/v1alpha1
@@ -116,15 +117,98 @@ spec:
           value: PIPELINE_SUPPLIED
       taskRef:
         name: the-var-task
+
+To see this in action in the GUI add a Manual trigger for the pipeline-supplied-variable supplied in the drop down and invoke
 ```
 
-How do I get them parameterized from a user?  First, provide a parameter to the pipeline:
+## Parameters from a user to a task
+How do I get them parameterized from a user?  Starting at the top a parameter declared in the TriggerTemplate can be referenced in the evaluation.  The creation of the PipelineRun is with the $(params.var) expanded.
 ```
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: trigger-user-supplied-variable
+spec:
+  params:
+    - name: var
+      description: var example
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineRun
+      metadata:
+        name: pipelinerun-$(uid)
+      spec:
+        pipelineRef:
+          name: pipeline-input-parameter-variable
+        params:
+          - name: var
+            value: $(params.var)
 ```
 
-And provide the pipeline from a Pipelinerun which is an output of the TemplateTrigger in our configuration:
+The Pipeline is enhanced with params declaration which are in turn expanded in the tasks:
+```
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: pipeline-input-parameter-variable
+spec:
+  params:
+    - name: var
+      description: var example in pipeline
+  tasks:
+    - name: pipv
+      params:
+        - name: var
+          value: $(params.var)
+      taskRef:
+        name: the-var-task
 
+To see this in action in the GUI add a Manual trigger for the trigger-user-supplied-variable supplied in the drop down and invoke
+```
 
+## Secrets
+Kubernetes Secret resources are part of the core platform.  A Secret is created by the TriggerTemplate in this example.  The apikey param declaration is populated with the `apikey` provided by the user supplied Environment Properties in the console UI.  The Secret will persist key value pairs.  In this case the key `slot_key` will have the apikey as a value.
+
+```
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: trigger-user-supplied-secret-variable
+spec:
+  params:
+    - name: apikey
+      description: the ibmcloud api key
+  resourcetemplates:
+    - apiVersion: v1
+      kind: Secret
+      metadata:
+        name: secrets
+      type: Opaque
+      stringData:
+        slot_key: $(params.apikey)
+```
+Tasks steps allow the reference of Secret resources and associated values.
+- API_KEY: name of the environment variable
+- secrets: name of the Secrets resource
+- key: key in the stringData section of the Secret resource
+
+```
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: secret-env-task
+spec:
+  steps:
+    - name: echoenvvar
+      image: ubuntu
+      env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: slot_key
+
+```
 
 
 

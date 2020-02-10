@@ -187,7 +187,6 @@ spec:
       type: Opaque
       stringData:
         slot_key: $(params.apikey)
-        slot_key2: $(params.apikey)
     - apiVersion: tekton.dev/v1alpha1
       kind: PipelineRun
       metadata:
@@ -224,14 +223,8 @@ spec:
             secretKeyRef:
               name: secrets
               key: slot_key
-        - name: API_KEY2
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: slot_key2
       command: ["/bin/bash", "-c"]
       args:
         - |
           echo 04 lab2 secret in secrets slot_key VAR: $API_KEY
-          echo slot_key2 VAR: $API_KEY2
           echo done
