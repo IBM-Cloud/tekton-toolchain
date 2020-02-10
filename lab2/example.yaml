@@ -227,10 +227,10 @@ spec:
           valueFrom:
             secretKeyRef:
               name: secret-slot
-              key: API_KEY
+              key: API_KEY2
       command:
         - "/bin/bash"
       args:
         - "-c"
-        - "echo 02 lab2 secret in secret-slot VAR: $API_KEY"
+        - "echo 02 lab2 secret in secret-slot key2 VAR: $API_KEY"
 
