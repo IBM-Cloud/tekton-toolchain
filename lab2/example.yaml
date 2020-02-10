@@ -191,7 +191,8 @@ spec:
         name: secret-slot
       type: Opaque
       stringData:
-        slot_key: $(params.apikey)
+        - slot_key: $(params.apikey)
+        - slot_key2: $(params.apikey)
     - apiVersion: tekton.dev/v1alpha1
       kind: PipelineRun
       metadata:
