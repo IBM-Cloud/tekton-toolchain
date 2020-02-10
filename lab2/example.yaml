@@ -172,11 +172,6 @@ spec:
         name: trigger-user-supplied-secret-variable
 ---
 apiVersion: tekton.dev/v1alpha1
-kind: TriggerBinding
-metadata:
-  name: simple-binding
----
-apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: trigger-user-supplied-secret-variable
@@ -188,7 +183,7 @@ spec:
     - apiVersion: v1
       kind: Secret
       metadata:
-        name: secret-slot
+        name: secrets
       type: Opaque
       stringData:
         slot_key: $(params.apikey)
@@ -227,11 +222,17 @@ spec:
         - name: API_KEY
           valueFrom:
             secretKeyRef:
-              name: secret-slot
+              name: secrets
               key: slot_key
+        - name: API_KEY2
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: slot_key2
       command:
-        - "/bin/bash"
+        - ["/bin/bash", "-c"]
       args:
-        - "-c"
-        - "echo 03 lab2 secret in secret-slot slot_key VAR: $API_KEY; sleep 300; echo done"
-
+        - |
+          echo 04 lab2 secret in secrets slot_key VAR: $API_KEY
+          echo slot_key2 VAR: $API_KEY2
+          echo done
