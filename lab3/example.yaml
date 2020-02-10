@@ -1,0 +1,71 @@
+apiVersion: tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: user-defined-secret-variable
+spec:
+  triggers:
+    - binding:
+        name: simple-binding
+      template:
+        name: trigger-user-supplied-secret-variable
+---
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: simple-binding
+---
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: trigger-user-supplied-secret-variable
+spec:
+  params:
+    - name: API_KEY
+      description: the ibmcloud api key
+  resourcetemplates:
+    - apiVersion: v1
+      kind: Secret
+      # name must be cd-secret as defined by git task helper
+      metadata:
+        name: cd-secret
+      type: Opaque
+      # apikey value must be stored in the key API_KEY as defined by the git task helper
+      stringData:
+        API_KEY: $(params.API_KEY)
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineRun
+      metadata:
+        name: pipelinerun-$(uid)
+      spec:
+        pipelineRef:
+          name: pipeline-secret
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: pipeline-secret
+spec:
+  tasks:
+    - name: pipelinesecret
+      taskRef:
+        name: secret-env-task
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: secret-env-task
+spec:
+  steps:
+    - name: echoenvvar
+      image: ubuntu
+      env:
+        - name: apikey
+          valueFrom:
+            secretKeyRef:
+              name: cd-secret
+              key: API_KEY
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          echo 04 lab2 secret in secrets slot_key VAR: $apikey
+          echo done
