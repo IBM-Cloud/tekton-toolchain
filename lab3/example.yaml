@@ -46,9 +46,22 @@ metadata:
   name: pipeline-secret
 spec:
   tasks:
+    - name: the-clone-repo-task
+      taskRef:
+        name: clone-repo-task
+      params:
+        - name: task-pvc
+          value: thepvc
+        - name: repository
+          value: https://github.com/powellquiring/tekton
+        - name: branch
+          value: master
     - name: pipelinesecret
       taskRef:
         name: secret-env-task
+      runAfter:
+        - the-clone-repo-task
+
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -67,5 +80,16 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          echo 04 lab2 secret in secrets slot_key VAR: $apikey
+          echo 00 lab3 secret in secrets slot_key VAR: $apikey
+          ls /
+          ls /gitrepo
           echo done
+      volumeMounts:
+        - mountPath: /gitrepo
+          name: task-volume
+
+  volumes:
+    - name: task-volume
+      persistentVolumeClaim:
+        claimName: thepvc
+
