@@ -109,7 +109,28 @@ This explains the output for lab2 from the pipeline:
 [xx1 : echovar] VALUE
 ```
 
-But how do I get parameters to the task?
+But how do I get parameters to the task? In the pipeline:
+```
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: pipeline-supplied-variable
+spec:
+  tasks:
+    - name: psv
+      params:
+        - name: var
+          value: PIPELINE_SUPPLIED
+      taskRef:
+        name: the-var-task
+```
+
+How do I get them parameterized from a user?  First, provide a parameter to the pipeline:
+```
+```
+
+And provide the pipeline from a Pipelinerun which is an output of the TemplateTrigger in our configuration:
+
 
 
 

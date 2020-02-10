@@ -1,3 +1,4 @@
+# no parameter use default
 apiVersion: tekton.dev/v1alpha1
 kind: EventListener
 metadata:
@@ -74,7 +75,7 @@ spec:
         name: the-var-task
 
 ---
-# Pass from a user supplied Environment property in the Delivery Pipeline Tekton Configuration
+# Pass variable from a user supplied Environment property in the Delivery Pipeline Tekton Configuration
 apiVersion: tekton.dev/v1alpha1
 kind: EventListener
 metadata:
@@ -85,6 +86,11 @@ spec:
         name: simple-binding
       template:
         name: trigger-user-supplied-variable
+---
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: simple-binding
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
@@ -123,10 +129,66 @@ spec:
         name: the-var-task
 
 ---
+# Pass secret
+apiVersion: tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: user-defined-secret-variable
+spec:
+  triggers:
+    - binding:
+        name: simple-binding
+      template:
+        name: trigger-user-supplied-secret-variable
+---
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
   name: simple-binding
+---
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: trigger-user-supplied-variable
+spec:
+  params:
+    - name: var
+      description: var example
+  resourcetemplates:
+    - apiVersion: v1
+      kind: Secret
+      metadata:
+        name: cd-secret
+      type: Opaque
+      stringData:
+        API_KEY: $(params.apikey)
+    - apiVersion: tekton.dev/v1alpha1
+      kind: PipelineRun
+      metadata:
+        name: pipelinerun-$(uid)
+      spec:
+        pipelineRef:
+          name: pipeline-input-parameter-variable
+        params:
+          - name: var
+            value: $(params.var)
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: pipeline-input-parameter-variable
+spec:
+  params:
+    - name: var
+      description: var example in pipeline
+  tasks:
+    - name: pipv
+      params:
+        - name: var
+          value: $(params.var)
+      taskRef:
+        name: the-var-task
+
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -155,3 +217,24 @@ spec:
         - /bin/echo
       args:
         - $(inputs.params.var)
+
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: secret-env-task
+spec:
+  steps:
+    - name: echoenvvar
+      image: ubuntu
+      env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: cd-secret
+              key: API_KEY
+      command:
+        - "/bin/bash"
+      args:
+        - "-c"
+        - "echo 01 lab2 env VAR: $API_KEY"
