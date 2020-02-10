@@ -188,7 +188,7 @@ spec:
     - apiVersion: v1
       kind: Secret
       metadata:
-        name: cd-secret
+        name: secret-slot
       type: Opaque
       stringData:
         API_KEY: $(params.apikey)
@@ -226,11 +226,11 @@ spec:
         - name: API_KEY
           valueFrom:
             secretKeyRef:
-              name: cd-secret
+              name: secret-slot
               key: API_KEY
       command:
         - "/bin/bash"
       args:
         - "-c"
-        - "echo 01 lab2 env VAR: $API_KEY"
+        - "echo 02 lab2 secret in secret-slot VAR: $API_KEY"
 
