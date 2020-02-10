@@ -229,8 +229,7 @@ spec:
             secretKeyRef:
               name: secrets
               key: slot_key2
-      command:
-        - ["/bin/bash", "-c"]
+      command: ["/bin/bash", "-c"]
       args:
         - |
           echo 04 lab2 secret in secrets slot_key VAR: $API_KEY

@@ -1,5 +1,5 @@
 # lab 2
-This lab on next steps: interactive use, git integration for pipeline start and getting github source for tekton tasks
+This lab focuses on parameters and secrets
 
 ## Turn on github building
 
@@ -29,7 +29,7 @@ Open the `Delivery Pipeline` and in a few moments a new pipeline run will appear
 ## Running tkn command line and using private workers
 You can optionally improve your development environment by running tekton from the command line.  This is also a good time to step back and create your own kubernetes cluster and worker nodes.  It can be helpful in debugging to poke around in the tekton pods which is not possible when using the public, shared, workers.  
 
-Remember this section is optional, but to blaze ahead follow the instructions in the docs to:
+Remember this section is optional so feel free to skip on to the next section
 
 - Create a free kubernetes cluster
 - Install and initialize kubectl, following the instructions on the Access tab of the kubernetes cluster
@@ -64,15 +64,8 @@ $ tkn pipelinerun logs pipeline-run-zn6gd -f -n default
 
 ```
 
-## Run a shell script
-
-To run a shell script in a task the directory of the shell script needs to be available to the task.  Notice in lab2/scripts there is an example script: `hello.sh`.
-
-There are some handy tasks provided by the open toolchain and one of them deals with git repositories.  First open the toolchain and add a tool `GitHub`, Repository type: Existing, GitHub URL: https://github.com/open-toolchain/tekton-catalog
-
-Borrowing heavily from this example, check it out: https://github.com/open-toolchain/tekton-catalog/blob/master/git/sample/listener-simple-clone.yaml
-
-Before getting too deep lets look at parameters starting with tasks.  Below an input parameter `var` is declared and it has a default `VALUE`.
+## Parameter for a task
+Below an input parameter `var` is declared and it has a default `VALUE`.
 ```
 kind: Task
 metadata:
@@ -102,7 +95,7 @@ spec:
         - "echo env VAR: $VAR"
 ```
 
-This explains the output for lab2 from the pipeline:
+This explains the output from pipeline-no-variable
 ```
 [xx1 : echoenvvar] 01 lab2 env VAR: VALUE
 
