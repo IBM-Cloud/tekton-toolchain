@@ -39,6 +39,10 @@ spec:
       spec:
         pipelineRef:
           name: pipeline-secret
+        params:
+          - name: task-pvc
+            value: pipelinerun-$(uid)-pvc
+
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
@@ -57,6 +61,9 @@ spec:
 #        - name: branch
 #          value: master
     - name: pipelinesecret
+      params:
+        - name: task-pvc
+          value: $(inputs.params.task-vpc)
       taskRef:
         name: secret-env-task
 #      runAfter:
@@ -68,6 +75,9 @@ kind: Task
 metadata:
   name: secret-env-task
 spec:
+  inputs:
+    params:
+      - name: task-pvc
   steps:
     - name: echoenvvar
       image: ubuntu
@@ -77,10 +87,14 @@ spec:
             secretKeyRef:
               name: cd-secret
               key: API_KEY
+      env:
+        - name: task_pvc
+          value: $(inputs.params.task-pvc)
       command: ["/bin/bash", "-c"]
       args:
         - |
-          echo 00 lab3 secret in secrets slot_key VAR: $apikey
+          echo 01 lab3 secret in secrets slot_key VAR: $apikey
+          echo task_pvc: $task_pvc
           ls /
           ls /gitrepo
           echo done
@@ -92,7 +106,8 @@ spec:
 
   volumes:
     - name: task-volume
-      emptyDir: {}
-#      persistentVolumeClaim:
-#        claimName: thepvc
+      persistentVolumeClaim:
+        claimName: $(inputs.params.task-pvc)
+
+#      emptyDir: {}
 
