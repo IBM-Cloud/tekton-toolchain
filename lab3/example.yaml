@@ -59,8 +59,8 @@ spec:
     - name: pipelinesecret
       taskRef:
         name: secret-env-task
-      runAfter:
-        - the-clone-repo-task
+#      runAfter:
+#        - the-clone-repo-task
 
 ---
 apiVersion: tekton.dev/v1alpha1
