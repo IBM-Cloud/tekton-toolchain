@@ -92,6 +92,7 @@ spec:
 
   volumes:
     - name: task-volume
-      persistentVolumeClaim:
-        claimName: thepvc
+      emptyDir: {}
+#      persistentVolumeClaim:
+#        claimName: thepvc
 
