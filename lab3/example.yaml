@@ -46,16 +46,16 @@ metadata:
   name: pipeline-secret
 spec:
   tasks:
-    - name: the-clone-repo-task
-      taskRef:
-        name: clone-repo-task
-      params:
-        - name: task-pvc
-          value: thepvc
-        - name: repository
-          value: https://github.com/powellquiring/tekton
-        - name: branch
-          value: master
+#    - name: the-clone-repo-task
+#      taskRef:
+#        name: clone-repo-task
+#      params:
+#        - name: task-pvc
+#          value: thepvc
+#        - name: repository
+#          value: https://github.com/powellquiring/tekton
+#        - name: branch
+#          value: master
     - name: pipelinesecret
       taskRef:
         name: secret-env-task
