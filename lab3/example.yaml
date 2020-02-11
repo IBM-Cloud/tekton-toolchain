@@ -65,7 +65,7 @@ spec:
     - name: pipelinesecret
       params:
         - name: task-pvc
-          value: $(params.task-vpc)
+          value: $(params.task-pvc)
       taskRef:
         name: secret-env-task
 #      runAfter:
