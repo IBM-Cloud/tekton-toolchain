@@ -87,7 +87,6 @@ spec:
             secretKeyRef:
               name: cd-secret
               key: API_KEY
-      env:
         - name: task_pvc
           value: $(inputs.params.task-pvc)
       command: ["/bin/bash", "-c"]
