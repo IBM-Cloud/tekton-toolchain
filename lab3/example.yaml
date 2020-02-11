@@ -103,10 +103,10 @@ spec:
 #        - mountPath: /gitrepo
 #          name: task-volume
 
-  volumes:
-    - name: task-volume
-      persistentVolumeClaim:
-        claimName: $(inputs.params.task-pvc)
+#  volumes:
+#    - name: task-volume
+#      persistentVolumeClaim:
+#        claimName: $(inputs.params.task-pvc)
 
 #      emptyDir: {}
 
