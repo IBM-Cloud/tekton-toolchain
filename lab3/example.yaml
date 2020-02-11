@@ -114,7 +114,8 @@ spec:
   volumes:
     - name: task-volume
       persistentVolumeClaim:
-        claimName: $(inputs.params.task-pvc)
+        claimName: zzzzzzzzzz
+#        claimName: $(inputs.params.task-pvc)
 #        claimName: pipelinerun-22c0d52b-5b1e-4d08-ab9f-9dc2526057b2-pvc
 #      emptyDir: {}
 
