@@ -68,8 +68,14 @@ spec:
           value: $(params.task-pvc)
       taskRef:
         name: secret-env-task
-#      runAfter:
-#        - the-clone-repo-task
+    - name: pipelinesecret2
+      params:
+        - name: task-pvc
+          value: $(params.task-pvc)
+      taskRef:
+        name: secret-env-task
+      runAfter:
+        - pipelinesecret
 
 ---
 apiVersion: tekton.dev/v1alpha1
@@ -94,6 +100,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
+          set -x
           echo 03 lab3 secret in secrets slot_key VAR: $apikey
           echo task_pvc: $task_pvc
           ls /
