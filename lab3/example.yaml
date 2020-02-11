@@ -99,11 +99,11 @@ spec:
           ls /
           ls /gitrepo
           echo done
-#          echo hi >> /gitrepo/hi
-#          cat /gitrepo/hi
-#      volumeMounts:
-#        - mountPath: /gitrepo
-#          name: task-volume
+          echo hi >> /gitrepo/hi
+          cat /gitrepo/hi
+      volumeMounts:
+        - mountPath: /gitrepo
+          name: task-volume
   volumes:
     - name: task-volume
       persistentVolumeClaim:
