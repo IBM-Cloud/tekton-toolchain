@@ -49,9 +49,8 @@ kind: Pipeline
 metadata:
   name: pipeline-secret
 spec:
-  inputs:
-    params:
-      - name: task-pvc
+  params:
+    - name: task-pvc
   tasks:
 #    - name: the-clone-repo-task
 #      taskRef:
