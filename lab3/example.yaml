@@ -90,8 +90,8 @@ spec:
 #        - mountPath: /gitrepo
 #          name: task-volume
 
-#  volumes:
-#    - name: task-volume
-#      persistentVolumeClaim:
-#        claimName: thepvc
+  volumes:
+    - name: task-volume
+      persistentVolumeClaim:
+        claimName: thepvc
 
