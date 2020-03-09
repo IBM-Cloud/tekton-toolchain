@@ -3,8 +3,8 @@ Very simple pipeline.
 
 This is about the simplest pipeline that can be configured and added to a `pipeline service` of a toolchain.
 - Create a toolchain (build your own toolchain) in the context of this toolchain:
-- Add tool GitHub, repository type: existing, Repository URL: this repo or your clone: https://github.com/powellquiring/tekton
-- Add tool `Delivery Pipeline`, name: whateever, Pipeline type: Tekton
+- Add tool **GitHub**, GitHubServer: GitHub (https://github.com), repository type: existing, Repository URL: this repo or your fork: https://github.com/powellquiring/tekton
+- Add tool **Delivery Pipeline**, name: whateever, Pipeline type: Tekton
 
 Open Delivery Pipeline
 - Definitions, Repository: GitHub repository above in drop down, Branch: master, Path: lab1 **NOTE**

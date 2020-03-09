@@ -157,6 +157,13 @@ spec:
         - /bin/echo
       args:
         - $(inputs.params.var)
+    - name: shellscript
+      image: ubuntu
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          echo this looks just like a shell script and the '$ ( inputs.params.var ) ' is subbed in here: '$(inputs.params.var)'
+          echo done with shellscript
 
 ---
 # Pass secret

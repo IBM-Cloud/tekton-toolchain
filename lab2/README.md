@@ -3,13 +3,13 @@ This lab focuses on parameters and secrets
 
 ## Turn on github building
 
-Fork the github repo if you have not already done so and perorm the steps in lab1 to create the toolchain containing the forked github repository and the pipeline service.
+Fork the github repo if you have not already done so and perform the steps in lab1 to create the toolchain containing the forked github repository and the pipeline service.
 
 In the `Pipeline Service` definitions change the `Path` to lab2
 
-First step is to open the toolchain then open the delivery pipeline, click `Configure Pipeline` and open the `Triggers` panel. Add a `Git Trigger` and specify the the git repo for your fork.
+First step is to open the toolchain then open the delivery pipeline, click `Configure Pipeline` and open the `Triggers` panel. Add a `Git Trigger` and specify the the git repo for your fork, check **When a commit is pushed**.
 
-The tekton pipeline will be triggered automatically when your fork is changed.  Make a change to the repository.  In the file lab2/example.yaml change the string:
+The tekton pipeline will be triggered automatically when your fork performs the operation checked.  Make a change to the repository.  In the file lab2/example.yaml change the string:
 
 ```
       args:
@@ -69,7 +69,7 @@ Below an input parameter `var` is declared and it has a default `VALUE`.
 ```
 kind: Task
 metadata:
-  name: the-task
+  name: the-var-task
 spec:
   inputs:
     params:
