@@ -75,7 +75,7 @@ metadata:
   name: task-workspace
 spec:
   workspaces:
-  - name: pipeline-pvc 
+  - name: task-pvc 
     mountPath: /artifacts   
   steps:
     - name: echoenvvar
