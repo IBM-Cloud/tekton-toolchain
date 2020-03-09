@@ -1,13 +1,13 @@
 apiVersion: tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: user-defined-secret-variable
+  name: workspace
 spec:
   triggers:
     - binding:
         name: simple-binding
       template:
-        name: trigger-user-supplied-secret-variable
+        name: trigger-workspace
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
@@ -17,101 +17,76 @@ metadata:
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: trigger-user-supplied-secret-variable
+  name: trigger-workspace
 spec:
-  params:
-    - name: API_KEY
-      description: the ibmcloud api key
   resourcetemplates:
     - apiVersion: v1
-      kind: Secret
-      # name must be cd-secret as defined by git task helper
+      kind: PersistentVolumeClaim
       metadata:
-        name: cd-secret
-      type: Opaque
-      # apikey value must be stored in the key API_KEY as defined by the git task helper
-      stringData:
-        API_KEY: $(params.API_KEY)
+        name: pipelinerun-$(uid)-pvc
+      spec:
+        resources:
+          requests:
+            storage:  5Gi
+        volumeMode: Filesystem
+        accessModes:
+          - ReadWriteOnce
     - apiVersion: tekton.dev/v1alpha1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
       spec:
         pipelineRef:
-          name: pipeline-secret
+            name: pipeline-workspace
+        workspaces:
+          - name: pipeline-pvc
+            persistentVolumeClaim:
+              claimName: pipelinerun-$(uid)-pvc
         params:
-          - name: task-pvc
-            value: pipelinerun-$(uid)-pvc
 
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  name: pipeline-secret
+  name: pipeline-workspace
 spec:
-  params:
-    - name: task-pvc
+  workspaces:
+  - name: pipeline-pvc
   tasks:
-#    - name: the-clone-repo-task
-#      taskRef:
-#        name: clone-repo-task
-#      params:
-#        - name: task-pvc
-#          value: thepvc
-#        - name: repository
-#          value: https://github.com/powellquiring/tekton
-#        - name: branch
-#          value: master
-    - name: pipelinesecret
-      params:
-        - name: task-pvc
-          value: $(params.task-pvc)
+    - name: task1
+      workspaces:
+      - name: task-pvc
+        workspace: pipeline-pvc          
       taskRef:
-        name: secret-env-task
-    - name: pipelinesecret2
-      params:
-        - name: task-pvc
-          value: $(params.task-pvc)
+        name: task-workspace
+    - name: task2
+      workspaces:
+      - name: task-pvc
+        workspace: pipeline-pvc          
       taskRef:
-        name: secret-env-task
+        name: task-workspace
       runAfter:
-        - pipelinesecret
+        - task1
 
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
 metadata:
-  name: secret-env-task
+  name: task-workspace
 spec:
-  inputs:
-    params:
-      - name: task-pvc
+  workspaces:
+  - name: pipeline-pvc 
+    mountPath: /artifacts   
   steps:
     - name: echoenvvar
       image: ubuntu
-      env:
-        - name: apikey
-          valueFrom:
-            secretKeyRef:
-              name: cd-secret
-              key: API_KEY
-        - name: task_pvc
-          value: $(inputs.params.task-pvc)
       command: ["/bin/bash", "-c"]
       args:
         - |
           set -x
-          echo 03 lab3 secret in secrets slot_key VAR: $apikey
-          echo task_pvc: $task_pvc
-          ls /
-          ls /gitrepo
-          echo hi >> /gitrepo/hi
-          cat /gitrepo/hi
-          echo done
-      volumeMounts:
-        - mountPath: /gitrepo
-          name: task-volume
-  volumes:
-    - name: task-volume
-      persistentVolumeClaim:
-        claimName: $(inputs.params.task-pvc)
+          echo 00 lab3
+          ls /artifacts
+          cd /artifacts
+          echo hi >> hi
+          ls /artifacts
+          cat hi
