@@ -166,8 +166,8 @@ spec:
       args:
         - |
           echo this looks just like a shell script and the '$ ( inputs.params.var ) ' is subbed in here: '$(inputs.params.var)'
+          env | grep VAR
           echo done with shellscript
-          env
 
 ---
 # Pass secret
