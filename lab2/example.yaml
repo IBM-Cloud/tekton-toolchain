@@ -159,11 +159,15 @@ spec:
         - $(inputs.params.var)
     - name: shellscript
       image: ubuntu
+      env:
+        - name: VAR
+          value: $(inputs.params.var)
       command: ["/bin/bash", "-c"]
       args:
         - |
           echo this looks just like a shell script and the '$ ( inputs.params.var ) ' is subbed in here: '$(inputs.params.var)'
           echo done with shellscript
+          env
 
 ---
 # Pass secret
