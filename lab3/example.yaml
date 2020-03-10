@@ -13,6 +13,7 @@ apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
   name: simple-binding
+
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
@@ -27,7 +28,7 @@ spec:
       spec:
         resources:
           requests:
-            storage:  5Gi
+            storage:  1Gi
         volumeMode: Filesystem
         accessModes:
           - ReadWriteOnce
@@ -42,7 +43,6 @@ spec:
           - name: pipeline-workspace
             persistentVolumeClaim:
               claimName: pipelinerun-$(uid)-pvc
-        params:
 
 ---
 apiVersion: tekton.dev/v1alpha1
@@ -76,7 +76,7 @@ metadata:
 spec:
   workspaces:
   - name: task-workspace 
-    mountPath: /artifacts   
+    # mountPath: /artifacts   
   steps:
     - name: echoenvvar
       image: ubuntu
@@ -85,9 +85,9 @@ spec:
         - |
           set -x
           echo 00 lab3
-          echo $(workspaces.task-workspace.path)
-          ls /artifacts
-          cd /artifacts
+          WS=$(workspaces.task-workspace.path)
+          ls $WS
+          cd $WS
           echo hi >> hi
-          ls /artifacts
+          ls $WS
           cat hi
