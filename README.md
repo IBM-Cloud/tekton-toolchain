@@ -5,3 +5,6 @@ The following labs will introduce you to the Tekton framework:
 - [Lab 1 Getting Started](lab1/README.md)
 - [Lab 2 Parameters](lab2/README.md)
 - [Lab 3 Workspaces](lab3/README.md)
+- [Lab 4 Git scripts](lab4/README.md)
+- [Lab 5 Example Upgrade](lab5/README.md)
+- 
