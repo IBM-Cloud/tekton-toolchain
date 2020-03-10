@@ -77,12 +77,6 @@ spec:
         description: var example in task
         default: VALUE
   steps:
-    - name: echovar
-      image: ubuntu
-      command:
-        - /bin/echo
-      args:
-        - $(inputs.params.var)
     - name: echoenvvar
       image: ubuntu
       env:
@@ -92,14 +86,38 @@ spec:
         - "/bin/bash"
       args:
         - "-c"
-        - "echo env VAR: $VAR"
+        - "echo 01 lab2 env VAR: $VAR"
+    - name: echovar
+      image: ubuntu
+      command:
+        - /bin/echo
+      args:
+        - $(inputs.params.var)
+    - name: shellscript
+      image: ubuntu
+      env:
+        - name: VAR
+          value: $(inputs.params.var)
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          echo this looks just like a shell script and the '$ ( inputs.params.var ) ' is subbed in here: '$(inputs.params.var)'
+          env | grep VAR
+          echo done with shellscript
 ```
 
 This explains the output from the pipeline-no-variable
 ```
-[xx1 : echoenvvar] 01 lab2 env VAR: VALUE
+[pdv : echoenvvar]
+01 lab2 env VAR: VALUE
 
-[xx1 : echovar] VALUE
+[pdv : echovar]
+VALUE
+
+[pdv : shellscript] 
+this looks just like a shell script and the $ ( inputs.params.var )  is subbed in here: VALUE
+VAR=VALUE
+done with shellscript
 ```
 
 ## Parameters from a pipeline to a task
@@ -163,7 +181,11 @@ spec:
       taskRef:
         name: the-var-task
 
-To see this in action in the GUI add a Manual trigger for the trigger-user-supplied-variable supplied in the drop down and invoke
+To see this in action in the GUI click on Configure Pipeline:
+- Environment Properties - add Text property **var** with a value like `defined in environment properties`
+- Triggers - add a Manual trigger for user-defined-variable
+
+Then **Run Pipeline** and select the trigger created.  Check the output and verify the parameters were passed through correctly.
 ```
 
 ## Secrets
@@ -208,12 +230,8 @@ spec:
               name: secrets
               key: slot_key
 
+To see this in action in the GUI click on Configure Pipeline:
+- Environment Properties - add a Secure property **apikey** with a value like `veryprivate`
+- Triggers - add a Manual trigger for user-defined-secret
+
 ```
-
-
-
-
-
-
-Open the Delivery Pipeline, click `Configure Pipeline` and in the `Definitions` tab choose `Add`, Repository: tekton-catalog, Branch
-

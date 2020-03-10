@@ -1,3 +1,4 @@
 #vim swap files
 [._]*.sw[a-p]
+tmp
 

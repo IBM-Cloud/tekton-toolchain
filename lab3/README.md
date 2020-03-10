@@ -9,7 +9,7 @@ If continuing from the previous lab open the pipeline configuration and configur
 A private worker will be needed to create a workspace.
 
 ## Trigger Template
-The trigger template will create a PersistentVolumeClaim (PVC) and a PipelineRun with a workspace that uses the PVC.  Notice the user of $(uid) to create a 
+The trigger template will create a PersistentVolumeClaim (PVC) and a PipelineRun with a workspace that uses the workspace.  Notice that $(uid) is used to create a unique id for the PVC adn workspace.
 
 ```
 apiVersion: tekton.dev/v1alpha1
@@ -25,7 +25,7 @@ spec:
       spec:
         resources:
           requests:
-            storage:  5Gi
+            storage:  1Gi
         volumeMode: Filesystem
         accessModes:
           - ReadWriteOnce
@@ -41,4 +41,21 @@ spec:
             persistentVolumeClaim:
               claimName: pipelinerun-$(uid)-pvc
 
+```
+
+The workspace is part of the pipeline and the task connected through the name
+```
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: pipeline-workspace
+spec:
+  workspaces:
+  - name: pipeline-workspace
+  tasks:
+    - name: task1
+      workspaces:
+      - name: task-workspace
+        workspace: pipeline-workspace          
+      taskRef:
 ```
