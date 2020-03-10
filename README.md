@@ -3,3 +3,5 @@ The IBM cloud has supported devops and CI/CD for decades.  The IBM Cloud devops 
 
 The following labs will introduce you to the Tekton framework:
 - [Lab 1 Getting Started](lab1/README.md)
+- [Lab 2 Parameters](lab2/README.md)
+- [Lab 3 Workspaces](lab3/README.md)
