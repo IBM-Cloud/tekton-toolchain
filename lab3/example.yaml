@@ -39,7 +39,7 @@ spec:
         pipelineRef:
             name: pipeline-workspace
         workspaces:
-          - name: pipeline-pvc
+          - name: pipeline-workspace
             persistentVolumeClaim:
               claimName: pipelinerun-$(uid)-pvc
         params:
@@ -51,18 +51,18 @@ metadata:
   name: pipeline-workspace
 spec:
   workspaces:
-  - name: pipeline-pvc
+  - name: pipeline-workspace
   tasks:
     - name: task1
       workspaces:
-      - name: task-pvc
-        workspace: pipeline-pvc          
+      - name: task-workspace
+        workspace: pipeline-workspace          
       taskRef:
         name: task-workspace
     - name: task2
       workspaces:
-      - name: task-pvc
-        workspace: pipeline-pvc          
+      - name: task-workspace
+        workspace: pipeline-workspace          
       taskRef:
         name: task-workspace
       runAfter:
@@ -75,7 +75,7 @@ metadata:
   name: task-workspace
 spec:
   workspaces:
-  - name: task-pvc 
+  - name: task-workspace 
     mountPath: /artifacts   
   steps:
     - name: echoenvvar
@@ -85,6 +85,7 @@ spec:
         - |
           set -x
           echo 00 lab3
+          echo $(workspaces.task-workspace.path)
           ls /artifacts
           cd /artifacts
           echo hi >> hi

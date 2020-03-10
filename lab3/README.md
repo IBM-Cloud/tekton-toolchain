@@ -1,5 +1,7 @@
 # lab 3
-Persistent volumes
+This lab focuses on workspaces.
+
+I workspace is a collection of disk volumes
 
 Stuck trying to figure out how to create a pvc
 ...
