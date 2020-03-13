@@ -70,8 +70,8 @@ spec:
         workspace: pipeline-workspace          
       taskRef:
         name: task-workspace
-    runAfter:
-    - clone
+      runAfter:
+      - clone
     - name: task2
       workspaces:
       - name: task-workspace
