@@ -52,18 +52,23 @@ metadata:
 spec:
   workspaces:
   - name: pipeline-workspace
+  params:
+    - name: repository
+      default: https://github.com/powellquiring/tekton.git
+    - name: branch
+      default: master
   tasks:
     - name: clone
       workspaces:
       - name: artifacts
         workspace: pipeline-workspace          
       taskRef:
-        name: clone-repo-task-replacement
-#      params:
-#      - name: repository
-#        value: https://github.com/powellquiring/tekton.git
-#      - name: branch
-#        value: master
+        name: clone-repo
+      params:
+      - name: repository
+        value: $(params.repository)
+      - name: branch
+        value: $(params.branch)
     - name: task1
       workspaces:
       - name: task-workspace
@@ -73,29 +78,6 @@ spec:
       runAfter:
       - clone
 
----
-apiVersion: tekton.dev/v1alpha1
-kind: Task
-metadata:
-  name: clone-repo-task-replacement
-spec:
-  workspaces:
-  - name: artifacts 
-  steps:
-    - name: clone
-      image: ibmcom/pipeline-base-image
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          set -x
-          WS=$(workspaces.artifacts.path)
-          ls $WS
-          cd $WS
-          git --version
-          git clone --single-branch --branch master https://github.com/powellquiring/tekton
-          echo hi >> hi
-          ls $WS
-          cat hi
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
