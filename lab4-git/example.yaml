@@ -59,11 +59,11 @@ spec:
         workspace: pipeline-workspace          
       taskRef:
         name: clone-repo-task-replacement
-      params:
-      - name: repository
-        value: https://github.com/powellquiring/tekton.git
-      - name: branch
-        value: master
+#      params:
+#      - name: repository
+#        value: https://github.com/powellquiring/tekton.git
+#      - name: branch
+#        value: master
     - name: task1
       workspaces:
       - name: task-workspace
