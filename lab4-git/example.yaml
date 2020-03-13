@@ -55,7 +55,7 @@ spec:
   tasks:
     - name: clone
       workspaces:
-      - name: task-workspace
+      - name: artifacts
         workspace: pipeline-workspace          
       taskRef:
         name: clone-repo-task
