@@ -58,7 +58,7 @@ spec:
       - name: artifacts
         workspace: pipeline-workspace          
       taskRef:
-        name: clone-repo-task
+        name: clone-repo-task-replacement
       params:
       - name: repository
         value: https://github.com/powellquiring/tekton.git
@@ -81,6 +81,29 @@ spec:
       runAfter:
         - task1
 
+---
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: clone-repo-task-replacement
+spec:
+  workspaces:
+  - name: task-workspace 
+  steps:
+    - name: clone
+      image: ibmcloudApi
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          WS=$(workspaces.task-workspace.path)
+          ls $WS
+          cd $WS
+          git clone --single-branch --branch master https://github.com/powellquiring/tekton
+          git 
+          echo hi >> hi
+          ls $WS
+          cat hi
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: Task
