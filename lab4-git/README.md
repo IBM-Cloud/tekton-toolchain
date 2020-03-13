@@ -1,17 +1,19 @@
 # lab 4 - Git
+
 This lab extends the previous lab that created a workspace by populating the workspace with the contents of a git repository.
 
 # Git Shared Task
-A git clone task will be created in this lab.  It is generally useful so it will be placed in a shared directory that can be used by multiple pipelines.
 
-Open the Delivery Pipeline again.  Open **Configure Pipeline**. Select the **Definitions** panel and edit to resemble the following:
+A git clone task will be created in this lab. It is generally useful so it will be placed in a shared directory that can be used by multiple pipelines.
+
+Open the Delivery Pipeline again. Open **Configure Pipeline**. Select the **Definitions** panel and edit to resemble the following:
 |Repository|Branch|Path|
---
+|-|-|-|
 |https://github.com/powellquiring/tekton|master|lab4-git|
 |https://github.com/powellquiring/tekton|master|shared|
 
+Notice the **shared** directory. Check out the shared/tasks.yaml file in your clone:
 
-Notice the **shared** directory.  Check out the shared/tasks.yaml file in your clone:
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -19,7 +21,7 @@ metadata:
   name: clone-repo
 spec:
   workspaces:
-  - name: artifacts 
+  - name: artifacts
   inputs:
     params:
     - name: repository
@@ -42,9 +44,10 @@ spec:
           ls $WS
 ```
 
-By now this looks familiar.  The task accepts parameters for repository and branch and uses the values in the script as you would expect.
+By now this task looks familiar. The task accepts parameters for repository and branch and uses the values in the script as described in the prevous lab
 
-The
+The pipeline is also unsurprising. Parameters with default values hold the repository and branch. The second task is going to wait for the clone to complete before continuing. Some details are elided, take a look at the source code.
+
 ```
 kind: Pipeline
 spec:
@@ -59,7 +62,7 @@ spec:
     - name: clone
       workspaces:
       - name: artifacts
-        workspace: pipeline-workspace          
+        workspace: pipeline-workspace
       taskRef:
         name: clone-repo
       params:
@@ -67,26 +70,25 @@ spec:
         value: $(params.repository)
       - name: branch
         value: $(params.branch)
+
     - name: task1
-      workspaces:
-      - name: task-workspace
-        workspace: pipeline-workspace          
-      taskRef:
-        name: task-workspace
       runAfter:
       - clone
 ```
 
----- ---
+---
 
 Not using the shared git task it requires too many params
+
 ## Initialize
-Before continuing another GitHub tool must be added to the toolchain.  Remember the Toolchain is the top level object that contains the pipeline.
+
+Before continuing another GitHub tool must be added to the toolchain. Remember the Toolchain is the top level object that contains the pipeline.
+
 - GitHub Server: GitHub
 - Repository Type: Existing
 - Repository URL: https://github.com/open-toolchain/tekton-catalog
 
-|Repository|Branch|Path|
---
+## |Repository|Branch|Path|
+
 |https://github.com/powellquiring/tekton|master|lab4-git|
 |https://github.com/open-toolchain/tekton-catalog|tkn_pipeline_beta_support|git|

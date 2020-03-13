@@ -1,33 +1,46 @@
-# lab 2
+# lab 2 parameters
+
 This lab focuses on parameters and secrets
 
 ## Turn on github building
 
 Fork the github repo if you have not already done so and perform the steps in lab1 to create the toolchain containing the forked github repository and the pipeline service.
 
-In the `Pipeline Service` definitions change the `Path` to lab2
+Open the **Pipeline Service**
+Open the **Delivery Pipeline**
+Open **Configure Pipeline**
+
+- Select the **Definitions** panel and edit to resemble the following:
+
+| Repository                              | Branch | Path            |
+| --------------------------------------- | ------ | --------------- |
+| https://github.com/powellquiring/tekton | master | lab2-parameters |
 
 First step is to open the toolchain then open the delivery pipeline, click `Configure Pipeline` and open the `Triggers` panel. Add a `Git Trigger` and specify the the git repo for your fork, check **When a commit is pushed**.
 
-The tekton pipeline will be triggered automatically when your fork performs the operation checked.  Make a change to the repository.  In the file lab2/example.yaml change the string:
+The tekton pipeline will be triggered automatically when your fork performs the operation checked. Make a change to the repository. In the file lab2-parameters/example.yaml change the string:
 
 ```
       args:
         - "-c"
         - "echo 01 lab2 env VAR: $VAR"
 ```
+
 to
+
 ```
       args:
         - "-c"
         - "echo 02 lab2 env VAR: $VAR"
 ```
-You can even do this in the github web site.  Just hit the pencil and start editing.
 
-Open the `Delivery Pipeline` and in a few moments a new pipeline run will appear.  Open the log and verify the change.
+You can even do this in the github web site. Just hit the pencil and start editing.
+
+Open the `Delivery Pipeline` and in a few moments a new pipeline run will appear. Open the log and verify the change.
 
 ## Running tkn command line and using private workers
-You can optionally improve your development environment by running tekton from the command line.  This is also a good time to step back and create your own kubernetes cluster and worker nodes.  It can be helpful in debugging to poke around in the tekton pods which is not possible when using the public, shared, workers.  
+
+You can optionally improve your development environment by running tekton from the command line. This is also a good time to step back and create your own kubernetes cluster and worker nodes. It can be helpful in debugging to poke around in the tekton pods which is not possible when using the public, shared, workers.
 
 Remember this section is optional so feel free to skip on to the next section
 
@@ -36,14 +49,14 @@ Remember this section is optional so feel free to skip on to the next section
 - Configure a **Delivery Pipeline Private Worker** in the toolchain
 - Follow the Getting Started instruction in the Deliery Pipeline Private Worker to install private worker support into the kuberrnetes cluster
 
-Now that kubectl is installed and have connected to the kuberrnetes server you can install tkn, the Tekton command line tool: https://github.com/tektoncd/cli.  For me I see
+Now that kubectl is installed and have connected to the kuberrnetes server you can install tkn, the Tekton command line tool: https://github.com/tektoncd/cli. For me I see
 
 ```
 $ tkn version
 Client version: 0.7.0
 ```
 
-Lets kick off a pipeline.  Notice how pipeline start command prints out the command to paste to watch it complete, for my case: tkn pipelinerun logs pipeline-run-zn6gd -f -n default.  The EventListener, TriggerBinding and TriggerTemplate are not part of the core, ignore those warnings:
+Lets kick off a pipeline. Notice how pipeline start command prints out the command to paste to watch it complete, for my case: tkn pipelinerun logs pipeline-run-zn6gd -f -n default. The EventListener, TriggerBinding and TriggerTemplate are not part of the core, ignore those warnings:
 
 ```
 $ kubectl apply -f example.yaml
@@ -65,7 +78,9 @@ $ tkn pipelinerun logs pipeline-run-zn6gd -f -n default
 ```
 
 ## Parameter for a task
+
 Below an input parameter `var` is declared and it has a default `VALUE`.
+
 ```
 kind: Task
 metadata:
@@ -107,6 +122,7 @@ spec:
 ```
 
 This explains the output from the pipeline-no-variable
+
 ```
 [pdv : echoenvvar]
 01 lab2 env VAR: VALUE
@@ -114,14 +130,16 @@ This explains the output from the pipeline-no-variable
 [pdv : echovar]
 VALUE
 
-[pdv : shellscript] 
+[pdv : shellscript]
 this looks just like a shell script and the $ ( inputs.params.var )  is subbed in here: VALUE
 VAR=VALUE
 done with shellscript
 ```
 
 ## Parameters from a pipeline to a task
+
 But how do I get parameters to the task? In the pipeline:
+
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
@@ -140,7 +158,9 @@ To see this in action in the GUI add a Manual trigger for the pipeline-supplied-
 ```
 
 ## Parameters from a user to a task
-How do I get them parameterized from a user?  Starting at the top a parameter declared in the TriggerTemplate can be referenced in the evaluation.  The creation of the PipelineRun is with the $(params.var) expanded.
+
+How do I get them parameterized from a user? Starting at the top a parameter declared in the TriggerTemplate can be referenced in the evaluation. The creation of the PipelineRun is with the \$(params.var) expanded.
+
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
@@ -164,6 +184,7 @@ spec:
 ```
 
 The Pipeline is enhanced with params declaration which are in turn expanded in the tasks:
+
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
@@ -189,7 +210,8 @@ Then **Run Pipeline** and select the trigger created.  Check the output and veri
 ```
 
 ## Secrets
-Kubernetes Secret resources are part of the core platform.  A Secret is created by the TriggerTemplate in this example.  The apikey param declaration is populated with the `apikey` provided by the user supplied Environment Properties in the console UI.  The Secret will persist key value pairs.  In this case the key `slot_key` will have the apikey as a value.
+
+Kubernetes Secret resources are part of the core platform. A Secret is created by the TriggerTemplate in this example. The apikey param declaration is populated with the `apikey` provided by the user supplied Environment Properties in the console UI. The Secret will persist key value pairs. In this case the key `slot_key` will have the apikey as a value.
 
 ```
 apiVersion: tekton.dev/v1alpha1
@@ -209,7 +231,9 @@ spec:
       stringData:
         slot_key: $(params.apikey)
 ```
+
 Tasks steps allow the reference of Secret resources and associated values.
+
 - API_KEY: name of the environment variable
 - secrets: name of the Secrets resource
 - key: key in the stringData section of the Secret resource

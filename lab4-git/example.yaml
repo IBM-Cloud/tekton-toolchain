@@ -94,7 +94,6 @@ spec:
       args:
         - |
           set -x
-          echo 00 lab4
           WS=$(workspaces.task-workspace.path)
           LAB=lab4-git
           ls $WS
