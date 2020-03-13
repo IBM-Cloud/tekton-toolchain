@@ -72,14 +72,6 @@ spec:
         name: task-workspace
       runAfter:
       - clone
-    - name: task2
-      workspaces:
-      - name: task-workspace
-        workspace: pipeline-workspace          
-      taskRef:
-        name: task-workspace
-      runAfter:
-        - task1
 
 ---
 apiVersion: tekton.dev/v1alpha1
@@ -99,8 +91,8 @@ spec:
           WS=$(workspaces.artifacts.path)
           ls $WS
           cd $WS
+          git --version
           git clone --single-branch --branch master https://github.com/powellquiring/tekton
-          git 
           echo hi >> hi
           ls $WS
           cat hi
@@ -120,10 +112,12 @@ spec:
       args:
         - |
           set -x
-          echo 00 lab3
+          echo 00 lab4
           WS=$(workspaces.task-workspace.path)
+          LAB=lab4-git
           ls $WS
           cd $WS
           echo hi >> hi
           ls $WS
           cat hi
+          ./tekton/$LAB/script.bash
