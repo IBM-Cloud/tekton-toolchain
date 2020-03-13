@@ -96,7 +96,7 @@ spec:
       args:
         - |
           set -x
-          WS=$(workspaces.task-workspace.path)
+          WS=$(workspaces.artifacts.path)
           ls $WS
           cd $WS
           git clone --single-branch --branch master https://github.com/powellquiring/tekton
