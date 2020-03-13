@@ -53,12 +53,25 @@ spec:
   workspaces:
   - name: pipeline-workspace
   tasks:
+    - name: clone
+      workspaces:
+      - name: task-workspace
+        workspace: pipeline-workspace          
+      taskRef:
+        name: clone-repo-task
+      params:
+      - name: repository
+        value: https://github.com/powellquiring/tekton.git
+      - name: branch
+        value: master
     - name: task1
       workspaces:
       - name: task-workspace
         workspace: pipeline-workspace          
       taskRef:
         name: task-workspace
+    runAfter:
+    - clone
     - name: task2
       workspaces:
       - name: task-workspace
