@@ -31,5 +31,3 @@ spec:
           echo hi >> hi
           ls $WS
           cat hi
-
----
