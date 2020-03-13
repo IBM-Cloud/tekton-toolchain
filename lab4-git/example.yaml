@@ -53,30 +53,30 @@ spec:
   workspaces:
   - name: pipeline-workspace
   params:
-    - name: repository
-      default: https://github.com/powellquiring/tekton.git
-    - name: branch
-      default: master
+  - name: repository
+    default: https://github.com/powellquiring/tekton.git
+  - name: branch
+    default: master
   tasks:
-    - name: clone
-      workspaces:
-      - name: artifacts
-        workspace: pipeline-workspace          
-      taskRef:
-        name: clone-repo
-      params:
-      - name: repository
-        value: $(params.repository)
-      - name: branch
-        value: $(params.branch)
-    - name: task1
-      workspaces:
-      - name: task-workspace
-        workspace: pipeline-workspace          
-      taskRef:
-        name: task-workspace
-      runAfter:
-      - clone
+  - name: clone
+    workspaces:
+    - name: artifacts
+      workspace: pipeline-workspace          
+    taskRef:
+      name: clone-repo
+    params:
+    - name: repository
+      value: $(params.repository)
+    - name: branch
+      value: $(params.branch)
+  - name: task1
+    workspaces:
+    - name: task-workspace
+      workspace: pipeline-workspace          
+    taskRef:
+      name: task-workspace
+    runAfter:
+    - clone
 
 ---
 apiVersion: tekton.dev/v1alpha1
@@ -99,7 +99,5 @@ spec:
           LAB=lab4-git
           ls $WS
           cd $WS
-          echo hi >> hi
-          ls $WS
-          cat hi
-          ./tekton/$LAB/script.bash
+          echo testing
+          [ "$(./tekton/$LAB/script.bash)" = "worked" ] || exit 1

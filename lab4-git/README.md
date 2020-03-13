@@ -11,8 +11,71 @@ Open the Delivery Pipeline again.  Open **Configure Pipeline**. Select the **Def
 |https://github.com/powellquiring/tekton|master|shared|
 
 
-Notice the **shared** directory.  Check out your forked git repo and look at the contents.  The new 
+Notice the **shared** directory.  Check out the shared/tasks.yaml file in your clone:
+```
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: clone-repo
+spec:
+  workspaces:
+  - name: artifacts 
+  inputs:
+    params:
+    - name: repository
+      description: the git repository
+    - name: branch
+      description: the git branch
+      default: master
+  steps:
+    - name: clone
+      image: ibmcom/pipeline-base-image
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          WS=$(workspaces.artifacts.path)
+          REPOSITORY=$(inputs.params.repository)
+          BRANCH=$(inputs.params.branch)
+          cd $WS
+          git --version
+          git clone --single-branch --branch $BRANCH $REPOSITORY
+          ls $WS
+```
 
+By now this looks familiar.  The task accepts parameters for repository and branch and uses the values in the script as you would expect.
+
+The
+```
+kind: Pipeline
+spec:
+  workspaces:
+  - name: pipeline-workspace
+  params:
+  - name: repository
+    default: https://github.com/powellquiring/tekton.git
+  - name: branch
+    default: master
+  tasks:
+    - name: clone
+      workspaces:
+      - name: artifacts
+        workspace: pipeline-workspace          
+      taskRef:
+        name: clone-repo
+      params:
+      - name: repository
+        value: $(params.repository)
+      - name: branch
+        value: $(params.branch)
+    - name: task1
+      workspaces:
+      - name: task-workspace
+        workspace: pipeline-workspace          
+      taskRef:
+        name: task-workspace
+      runAfter:
+      - clone
+```
 
 ---- ---
 

@@ -9,8 +9,6 @@ spec:
     params:
     - name: repository
       description: the git repo url
-    - name: repository
-      description: the git repository
     - name: branch
       description: the git branch
       default: master
@@ -20,14 +18,10 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x
           WS=$(workspaces.artifacts.path)
           REPOSITORY=$(inputs.params.repository)
           BRANCH=$(inputs.params.branch)
-          ls $WS
           cd $WS
           git --version
           git clone --single-branch --branch $BRANCH $REPOSITORY
-          echo hi >> hi
           ls $WS
-          cat hi
