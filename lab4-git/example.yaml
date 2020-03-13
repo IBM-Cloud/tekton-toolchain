@@ -91,7 +91,7 @@ spec:
   - name: artifacts 
   steps:
     - name: clone
-      image: ibmcloudApi
+      image: ibmcom/pipeline-base-image
       command: ["/bin/bash", "-c"]
       args:
         - |
