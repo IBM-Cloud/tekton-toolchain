@@ -1,12 +1,12 @@
-# lab 3
-This lab focuses on workspaces.
-
-A workspace is a disk volume made available to a task.
+# lab 4 - Git
+This lab extends the previous lab that created a workspace by populating the workspace with the contents of a git repository.
 
 ## Initialize
 If continuing from the previous lab open the pipeline configuration and configure a single definition for the lab3 path
 
 A private worker will be needed to create a workspace.
+
+---- ---
 
 ## Trigger Template
 The trigger template will create a PersistentVolumeClaim (PVC) and a PipelineRun with a workspace that uses the workspace.  Notice that $(uid) is used to create a unique id for the PVC adn workspace.
