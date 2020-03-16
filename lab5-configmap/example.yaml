@@ -81,10 +81,13 @@ spec:
     args:
       - |
         set -x
+        env 
         WS=$(workspaces.task-workspace.path)
         ls $WS
         CONFIG=/cd-config
         ls $CONFIG
+        cd $CONFIG
+        git clone 
         cat $CONFIG/toolchain.json
         jq <  $CONFIG/toolchain.json
 
