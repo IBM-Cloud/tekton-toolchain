@@ -18,7 +18,7 @@ Open **Configure Pipeline**
 
 | Repository                              | Branch | Path            |
 | --------------------------------------- | ------ | --------------- |
-| https://github.com/powellquiring/tekton | master | lab3-workspaces |
+| https://github.com/powellquiring/tekton-toolchain | master | lab3-workspaces |
 
 ## Trigger Template
 

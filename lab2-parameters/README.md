@@ -14,7 +14,7 @@ Open **Configure Pipeline**
 
 | Repository                              | Branch | Path            |
 | --------------------------------------- | ------ | --------------- |
-| https://github.com/powellquiring/tekton | master | lab2-parameters |
+| https://github.com/powellquiring/tekton-toolchain | master | lab2-parameters |
 
 First step is to open the toolchain then open the delivery pipeline, click `Configure Pipeline` and open the `Triggers` panel. Add a `Git Trigger` and specify the the git repo for your fork, check **When a commit is pushed**.
 
