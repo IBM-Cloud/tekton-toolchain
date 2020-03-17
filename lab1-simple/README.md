@@ -1,12 +1,13 @@
 # lab1 simple
 
-Very simple pipeline.
+Locate this GitHub repository and make a fork.
 
-This is about the simplest pipeline that can be configured and added to a `pipeline service` of a toolchain.
+This is about the simplest pipeline that can be configured and added to a **pipeline service** of a **toolchain**.
 
-- Create a toolchain (build your own toolchain) in the context of this toolchain:
+Visit the [IBM Cloud](https://cloud.ibm.com/) in your browser.  In the hamburger menu in the upper left choose `DevOps`.
+- Create a toolchain, **Build your own toolchain**, in the context of this toolchain:
 - Add tool **GitHub**, GitHubServer: GitHub (https://github.com), repository type: existing, Repository URL: this repo or your fork: https://github.com/powellquiring/tekton
-- Add tool **Delivery Pipeline**, name: whatever, Pipeline type: Tekton
+- Add tool **Delivery Pipeline**, name: whatever, Pipeline type: **Tekton**
 
 Open the **Delivery Pipeline**
 Open **Configure Pipeline**

@@ -18,7 +18,7 @@ Open **Configure Pipeline**
 
 First step is to open the toolchain then open the delivery pipeline, click `Configure Pipeline` and open the `Triggers` panel. Add a `Git Trigger` and specify the the git repo for your fork, check **When a commit is pushed**.
 
-The tekton pipeline will be triggered automatically when your fork performs the operation checked. Make a change to the repository. In the file lab2-parameters/example.yaml change the string:
+The tekton pipeline will be triggered automatically when your fork performs the operation checked. Make a change to the repository. In the file lab2-parameters/tekton.yaml change the string:
 
 ```
       args:
@@ -59,12 +59,12 @@ Client version: 0.7.0
 Lets kick off a pipeline. Notice how pipeline start command prints out the command to paste to watch it complete, for my case: tkn pipelinerun logs pipeline-run-zn6gd -f -n default. The EventListener, TriggerBinding and TriggerTemplate are not part of the core, ignore those warnings:
 
 ```
-$ kubectl apply -f example.yaml
+$ kubectl apply -f tekton.yaml
 pipeline.tekton.dev/pipeline created
 task.tekton.dev/the-var-task created
-unable to recognize "example.yaml": no matches for kind "EventListener" in version "tekton.dev/v1alpha1"
-unable to recognize "example.yaml": no matches for kind "TriggerBinding" in version "tekton.dev/v1alpha1"
-unable to recognize "example.yaml": no matches for kind "TriggerTemplate" in version "tekton.dev/v1alpha1"
+unable to recognize "tekton.yaml": no matches for kind "EventListener" in version "tekton.dev/v1alpha1"
+unable to recognize "tekton.yaml": no matches for kind "TriggerBinding" in version "tekton.dev/v1alpha1"
+unable to recognize "tekton.yaml": no matches for kind "TriggerTemplate" in version "tekton.dev/v1alpha1"
 $ tkn pipeline start pipeline
 Pipelinerun started: pipeline-run-zn6gd
 
