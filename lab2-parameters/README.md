@@ -1,5 +1,15 @@
 # lab 2 parameters
 
+## Goal
+You will create a **Toolchain Service** that contains a **Delivery Pipeline**.  The Delivery Pipeline will contain the Tekton objects required to execute automated build and deploy steps when a trigger is clicked.
+
+## Before you begin
+Navigate to the [tekton-toolchain](https://github.com/IBM-Cloud/tekton-toolchain) GitHub repository and make a fork.  I will call out mine, https://github.com/powellquiring/tekton-toolchain, during the tutorial, so use yours instead.
+
+If warnings or errors `Continuous Delivery service required...` are displayed you can live with the warnings or create a [Continuous Delivery](https://cloud.ibm.com/catalog/services/continuous-delivery) service (Lite plan) for the region.
+
+## Lets do it
+
 This lab focuses on parameters and secrets
 
 ## Turn on github building

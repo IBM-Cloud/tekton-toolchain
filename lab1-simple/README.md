@@ -1,15 +1,15 @@
-# lab1 simple
+# Tekton in the IBM Cloud - part 1 getting started
 
 ## Goal
-You will create a **Toolchain Service** that contains a **Delivery Pipeline**.  The Delivery Pipeline will contain the Tekton objects required to execute automated build and deploy steps when a trigger is clicked.
+You will create a **Toolchain Service** that contains a **Delivery Pipeline**.  The Delivery Pipeline will contain the Tekton resources required to execute automated build and deploy steps when a trigger is clicked.
 
 ## Before you begin
-Navigate to the [tekton-toolchain](https://github.com/IBM-Cloud/tekton-toolchain) GitHub repository and make a fork.  I will call out mine, https://github.com/powellquiring/tekton-toolchain, during the tutorial, so use yours instead.
+Navigate to the [tekton-toolchain](https://github.com/IBM-Cloud/tekton-toolchain) GitHub repository and make a fork.  I will refer to this fork as https://github.com/powellquiring/tekton-toolchain in this tutorial, when you see this replace it with your fork.
 
 If warnings or errors `Continuous Delivery service required...` are displayed you can live with the warnings or create a [Continuous Delivery](https://cloud.ibm.com/catalog/services/continuous-delivery) service (Lite plan) for the region.
 
 ## Lets do it
-This is about the simplest pipeline that can be configured and added to a **pipeline service** of a **toolchain**.
+This first part is about the simplest pipeline that can be configured and added to a **pipeline service** of a **toolchain**.
 
 Visit the [IBM Cloud](https://cloud.ibm.com/) in your browser.  In the hamburger menu in the upper left choose `DevOps`.
 - Create a toolchain, **Build your own toolchain**, in the context of this toolchain:
@@ -19,8 +19,10 @@ Visit the [IBM Cloud](https://cloud.ibm.com/) in your browser.  In the hamburger
   - Repository URL: this repo or your fork: https://github.com/powellquiring/tekton-toolchain
 - Add tool **Delivery Pipeline**, name: whatever, Pipeline type: **Tekton**
 
-Click the **Delivery Pipeline**.  Notice the context is in the Delivery Pipeline service just created.
-Click **Configure Pipeline**
+As you can see a toolchain is a landing page that holds integrated tools.  You have integrated two tools: GitHub and a Delivery Pipeline.
+
+Click the **Delivery Pipeline** to open.  Notice the context is in the Delivery Pipeline service just created.
+Click **Configure Pipeline** (if you do not see a Configure Pipeline button maybe you did not select Tekton when you created it)
 
 - Select the **Definitions** panel.  Definitions are going to define the set of tekton files that will contribute to this Delivery Pipeline Service.  Contribute all of the files in the **lab1-simple** path in your clone (I show my clone below):
 
