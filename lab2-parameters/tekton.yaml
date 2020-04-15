@@ -16,7 +16,7 @@ metadata:
   name: trigger-pipeline-no-variable
 spec:
   resourcetemplates:
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
@@ -24,7 +24,7 @@ spec:
         pipelineRef:
           name: pipeline-no-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-no-variable
@@ -53,7 +53,7 @@ metadata:
   name: trigger-pipeline-supplied-variable
 spec:
   resourcetemplates:
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
@@ -61,7 +61,7 @@ spec:
         pipelineRef:
           name: pipeline-supplied-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-supplied-variable
@@ -101,7 +101,7 @@ spec:
     - name: var
       description: var example
   resourcetemplates:
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
@@ -112,7 +112,7 @@ spec:
           - name: var
             value: $(params.var)
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-input-parameter-variable
@@ -130,7 +130,7 @@ spec:
 
 ---
 # shared task
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: the-var-task
@@ -198,7 +198,7 @@ spec:
       type: Opaque
       stringData:
         slot_key: $(params.apikey)
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
@@ -206,7 +206,7 @@ spec:
         pipelineRef:
           name: pipeline-secret
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-secret
@@ -216,7 +216,7 @@ spec:
       taskRef:
         name: secret-env-task
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: secret-env-task
