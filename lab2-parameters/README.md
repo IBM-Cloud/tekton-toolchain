@@ -1,15 +1,5 @@
 # lab 2 parameters
 
-## Goal
-You will create a **Toolchain Service** that contains a **Delivery Pipeline**.  The Delivery Pipeline will contain the Tekton objects required to execute automated build and deploy steps when a trigger is clicked.
-
-## Before you begin
-Navigate to the [tekton-toolchain](https://github.com/IBM-Cloud/tekton-toolchain) GitHub repository and make a fork.  I will call out mine, https://github.com/powellquiring/tekton-toolchain, during the tutorial, so use yours instead.
-
-If warnings or errors `Continuous Delivery service required...` are displayed you can live with the warnings or create a [Continuous Delivery](https://cloud.ibm.com/catalog/services/continuous-delivery) service (Lite plan) for the region.
-
-## Lets do it
-
 This lab focuses on parameters and secrets
 
 ## Turn on github building
@@ -24,68 +14,15 @@ Open **Configure Pipeline**
 
 | Repository                              | Branch | Path            |
 | --------------------------------------- | ------ | --------------- |
-| https://github.com/powellquiring/tekton-toolchain | master | lab2-parameters |
+| https://github.com/powellquiring/tekton | master | lab2-parameters |
 
-First step is to open the toolchain then open the delivery pipeline, click `Configure Pipeline` and open the `Triggers` panel. Add a `Git Trigger` and specify the the git repo for your fork, check **When a commit is pushed**.
+- Select the **Triggers** panel and add manual triggers for all EventListeners.  Name them the trigger the same as the EventListener name.  This will result in the following:
+  - task-default-variable
+  - pipeline-supplied-variable
+  - user-defined-variable
+  - user-defined-secret-variable
 
-The tekton pipeline will be triggered automatically when your fork performs the operation checked. Make a change to the repository. In the file lab2-parameters/tekton.yaml change the string:
-
-```
-      args:
-        - "-c"
-        - "echo 01 lab2 env VAR: $VAR"
-```
-
-to
-
-```
-      args:
-        - "-c"
-        - "echo 02 lab2 env VAR: $VAR"
-```
-
-You can even do this in the github web site. Just hit the pencil and start editing.
-
-Open the `Delivery Pipeline` and in a few moments a new pipeline run will appear. Open the log and verify the change.
-
-## Running tkn command line and using private workers
-
-You can optionally improve your development environment by running tekton from the command line. This is also a good time to step back and create your own kubernetes cluster and worker nodes. It can be helpful in debugging to poke around in the tekton pods which is not possible when using the public, shared, workers.
-
-Remember this section is optional so feel free to skip on to the next section
-
-- Create a free kubernetes cluster
-- Install and initialize kubectl, following the instructions on the Access tab of the kubernetes cluster
-- Configure a **Delivery Pipeline Private Worker** in the toolchain
-- Follow the Getting Started instruction in the Deliery Pipeline Private Worker to install private worker support into the kuberrnetes cluster
-
-Now that kubectl is installed and have connected to the kuberrnetes server you can install tkn, the Tekton command line tool: https://github.com/tektoncd/cli. For me I see
-
-```
-$ tkn version
-Client version: 0.7.0
-```
-
-Lets kick off a pipeline. Notice how pipeline start command prints out the command to paste to watch it complete, for my case: tkn pipelinerun logs pipeline-run-zn6gd -f -n default. The EventListener, TriggerBinding and TriggerTemplate are not part of the core, ignore those warnings:
-
-```
-$ kubectl apply -f tekton.yaml
-pipeline.tekton.dev/pipeline created
-task.tekton.dev/the-var-task created
-unable to recognize "tekton.yaml": no matches for kind "EventListener" in version "tekton.dev/v1alpha1"
-unable to recognize "tekton.yaml": no matches for kind "TriggerBinding" in version "tekton.dev/v1alpha1"
-unable to recognize "tekton.yaml": no matches for kind "TriggerTemplate" in version "tekton.dev/v1alpha1"
-$ tkn pipeline start pipeline
-Pipelinerun started: pipeline-run-zn6gd
-
-In order to track the pipelinerun progress run:
-tkn pipelinerun logs pipeline-run-zn6gd -f -n default
-$ tkn pipelinerun logs pipeline-run-zn6gd -f -n default
-[xx1 : echoenvvar] 01 lab2 env VAR: VALUE
-
-[xx1 : echovar] VALUE
-
-```
+Hit close to return to the Delivery Pipeline Dashboard
 
 ## Parameter for a task
 
@@ -131,7 +68,7 @@ spec:
           echo done with shellscript
 ```
 
-This explains the output from the pipeline-no-variable
+Click the **Run Pipeline** and choose task-default-variable and when it completes click on the pipeline run results to see the following output:
 
 ```
 [pdv : echoenvvar]
@@ -145,6 +82,10 @@ this looks just like a shell script and the $ ( inputs.params.var )  is subbed i
 VAR=VALUE
 done with shellscript
 ```
+
+In the `shellscript` step notice the string `$(inputs.params.var)` substitution is made before the shell script is executed.  
+
+>> Note: The tekton parameter specification `$(inputs.params.var)` looks a little like a bash shell variable which it is not and can potentially be confusing.
 
 ## Parameters from a pipeline to a task
 
@@ -163,13 +104,12 @@ spec:
           value: PIPELINE_SUPPLIED
       taskRef:
         name: the-var-task
-
-To see this in action in the GUI add a Manual trigger for the pipeline-supplied-variable supplied in the drop down and invoke
 ```
+The Pipeline task is supplying parameters to the same `the-var-task`.  Click **Run Pipeline** and chose pipeline-supplied-variable and check out the results.
 
 ## Parameters from a user to a task
 
-How do I get them parameterized from a user? Starting at the top a parameter declared in the TriggerTemplate can be referenced in the evaluation. The creation of the PipelineRun is with the \$(params.var) expanded.
+How do I get them parameterized from a user clicking in the Delivery Pipeline? A parameter specification is declared in the TriggerTemplate and can be referenced using `$(param.var)`.  The PipelineRun parameter, `$(param.var)`, is expanded when the PipelineRun is created.  In our example this is done when the **Run Pipeline** button is clicked.
 
 ```
 apiVersion: tekton.dev/v1alpha1
@@ -193,7 +133,7 @@ spec:
             value: $(params.var)
 ```
 
-The Pipeline is enhanced with params declaration which are in turn expanded in the tasks:
+Simnilarly the Pipeline has a parameter specification and the task is enhanced with a parameter expansion:
 
 ```
 apiVersion: tekton.dev/v1alpha1
@@ -211,20 +151,20 @@ spec:
           value: $(params.var)
       taskRef:
         name: the-var-task
+```
 
 To see this in action in the GUI click on Configure Pipeline:
-- Environment Properties - add Text property **var** with a value like `defined in environment properties`
-- Triggers - add a Manual trigger for user-defined-variable
+- Environment Properties - add Text property **var** with a value like `defined in environment properties`.  Save and Close.
 
-Then **Run Pipeline** and select the trigger created.  Check the output and verify the parameters were passed through correctly.
-```
+Now **Run Pipeline** with the manual trigger **user-defined-variable**.  The environment properties that have a name matching the TriggerTemplate parameter specification will be expanded.  In our case the `var` environment property will be expanded in the PipelineRun
+
+Check the output and verify the parameters were passed through correctly.
 
 ## Secrets
 
-Kubernetes Secret resources are part of the core platform. A Secret is created by the TriggerTemplate in this example. The apikey param declaration is populated with the `apikey` provided by the user supplied Environment Properties in the console UI. The Secret will persist key value pairs. In this case the key `slot_key` will have the apikey as a value.
+A kubernetes Secret object can be created by the TriggerTemplate. Below a Secret object named `secret-object` will be created.  As we saw earlier the `apikey` identifies the property in the console ui Environment Properties of the pipeline configuration in the console UI. The Secret object holds {key: value} pairs.  In this case {secret_key: $(params.apikey)}.
 
 ```
-apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: trigger-user-supplied-secret-variable
@@ -236,36 +176,30 @@ spec:
     - apiVersion: v1
       kind: Secret
       metadata:
-        name: secrets
+        name: secret-object
       type: Opaque
       stringData:
-        slot_key: $(params.apikey)
+        secret_key: $(params.apikey)
 ```
 
-Tasks steps allow the reference of Secret resources and associated values.
+Note the parameter is not passed through the PipelineRun into the Pipeline.  Instead the Task can pull the value from the Secret object.
 
-- API_KEY: name of the environment variable
-- secrets: name of the Secrets resource
-- key: key in the stringData section of the Secret resource
+- secret-object: name of the Secrets resource
+- secret_key: key of the {key: value} pair.
 
 ```
-apiVersion: tekton.dev/v1alpha1
 kind: Task
-metadata:
-  name: secret-env-task
 spec:
   steps:
     - name: echoenvvar
-      image: ubuntu
       env:
         - name: API_KEY
           valueFrom:
             secretKeyRef:
-              name: secrets
-              key: slot_key
+              name: secret-object
+              key: secret_key
+```
 
 To see this in action in the GUI click on Configure Pipeline:
 - Environment Properties - add a Secure property **apikey** with a value like `veryprivate`
 - Triggers - add a Manual trigger for user-defined-secret
-
-```
