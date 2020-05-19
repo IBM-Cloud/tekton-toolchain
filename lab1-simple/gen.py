@@ -21,7 +21,6 @@ def gen():
             args=["-c", "echo stuff > file; ls; cat file"],
         ),
         Step(image="ubuntu", name="lsafter", command=["ls"], args=["-l"]),
-        Step(image="ubuntu", name="catafter", command=["cat"], args=["file"]),
     ]
     t = Task(name="the-task", steps=steps)
     p = Pipeline(name="pipeline", tasks=[PipelineTask("xx1", taskRef=t.ref())])
