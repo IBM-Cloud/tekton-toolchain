@@ -44,6 +44,8 @@ kind: Task
 metadata:
   name: the-task
 spec:
+  results:
+  - name: file
   steps:
   - args:
     - 01 version
@@ -78,7 +80,7 @@ spec:
     name: env
   - args:
     - -c
-    - echo stuff > file; ls; cat file
+    - echo stuff > /tekton/results/file; ls /tekton/results; cat /tekton/results/file
     command:
     - /bin/bash
     image: ubuntu
@@ -90,7 +92,7 @@ spec:
     image: ubuntu
     name: lsafter
   - args:
-    - file
+    - /tekton/results/file
     command:
     - cat
     image: ubuntu
