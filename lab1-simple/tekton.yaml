@@ -90,9 +90,10 @@ spec:
     image: ubuntu
     name: lsafter
   - args:
-    - file
+    - -c
+    - ls; cat file
     command:
-    - cat
+    - /bin/bash
     image: ubuntu
     name: catafter
 
