@@ -78,7 +78,7 @@ spec:
     name: env
   - args:
     - -c
-    - echo stuff > file; ls; cat file
+    - echo stuff > file; ls; cat file; pwd
     command:
     - /bin/bash
     image: ubuntu
