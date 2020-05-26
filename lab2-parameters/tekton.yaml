@@ -166,6 +166,7 @@ spec:
         - |
           echo this looks just like a shell script and the '$ ( params.var ) ' is subbed in here: '$(params.var)'
           env | grep VAR
+          whoami
           echo done with shellscript
 
 ---
