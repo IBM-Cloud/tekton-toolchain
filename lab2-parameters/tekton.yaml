@@ -135,17 +135,16 @@ kind: Task
 metadata:
   name: the-var-task
 spec:
-  inputs:
-    params:
-      - name: var
-        description: var example in task
-        default: VALUE
+  params:
+    - name: var
+      description: var example in task
+      default: VALUE
   steps:
     - name: echoenvvar
       image: ubuntu
       env:
         - name: VAR
-          value: $(inputs.params.var)
+          value: $(params.var)
       command:
         - "/bin/bash"
       args:
@@ -156,16 +155,16 @@ spec:
       command:
         - /bin/echo
       args:
-        - $(inputs.params.var)
+        - $(params.var)
     - name: shellscript
       image: ubuntu
       env:
         - name: VAR
-          value: $(inputs.params.var)
+          value: $(params.var)
       command: ["/bin/bash", "-c"]
       args:
         - |
-          echo this looks just like a shell script and the '$ ( inputs.params.var ) ' is subbed in here: '$(inputs.params.var)'
+          echo this looks just like a shell script and the '$ ( params.var ) ' is subbed in here: '$(params.var)'
           env | grep VAR
           echo done with shellscript
 
