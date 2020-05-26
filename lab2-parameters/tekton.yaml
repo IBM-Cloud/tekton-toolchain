@@ -234,5 +234,6 @@ spec:
       args:
         - |
           echo 05 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
-          echo echo $API_KEY | od -a
+          echo $API_KEY | od -a
+          echo $API_KEY | base64 -d
           echo done
