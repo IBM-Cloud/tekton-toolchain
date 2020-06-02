@@ -44,7 +44,7 @@ spec:
           ls $WS
 ```
 
-By now this task looks familiar. The task accepts parameters for repository and branch and uses the values in the script as described in the prevous lab
+By now this task looks familiar. The task accepts parameters for repository and branch and uses the values in the script as described in the previous lab
 
 The pipeline is also unsurprising. Parameters with default values hold the repository and branch. The second task is going to wait for the clone to complete before continuing. Some details are elided, take a look at the source code.
 
