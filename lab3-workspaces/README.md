@@ -22,7 +22,7 @@ Open **Configure Pipeline**
 
 ## Trigger Template
 
-The trigger template will create a PersistentVolumeClaim (PVC) and a PipelineRun with a workspace that uses the workspace. Notice that \$(uid) is used to create a unique id for the PVC adn workspace.
+The trigger template will create a PersistentVolumeClaim (PVC) and a PipelineRun with a workspace that uses the workspace. Notice that \$(uid) is used to create a unique id for the PVC and workspace.
 
 ```
 apiVersion: tekton.dev/v1alpha1
