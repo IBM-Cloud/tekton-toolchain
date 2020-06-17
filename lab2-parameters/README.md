@@ -10,19 +10,19 @@ Open the **Pipeline Service**
 Open the **Delivery Pipeline**
 Open **Configure Pipeline**
 
-- Select the **Definitions** panel and edit to resemble the following:
+- Select the **Definitions** panel and edit to resemble the following.  Note the Path change from the previous lab:
 
 | Repository                              | Branch | Path            |
 | --------------------------------------- | ------ | --------------- |
 | https://github.com/powellquiring/tekton | master | lab2-parameters |
 
-- Select the **Triggers** panel and add manual triggers for all EventListeners.  Name them the trigger the same as the EventListener name.  This will result in the following:
+- Select the **Triggers** panel and add manual triggers for all EventListeners.  Name the trigger the same as the EventListener name.  This will result in the following:
   - task-default-variable
   - pipeline-supplied-variable
   - user-defined-variable
   - user-defined-secret-variable
 
-Hit close to return to the Delivery Pipeline Dashboard
+Hit **Save**.
 
 ## Parameter for a task
 
@@ -92,7 +92,7 @@ In the `shellscript` step notice the string `$(inputs.params.var)` substitution 
 But how do I get parameters to the task? In the pipeline:
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-supplied-variable
@@ -112,7 +112,7 @@ The Pipeline task is supplying parameters to the same `the-var-task`.  Click **R
 How do I get them parameterized from a user clicking in the Delivery Pipeline? A parameter specification is declared in the TriggerTemplate and can be referenced using `$(param.var)`.  The PipelineRun parameter, `$(param.var)`, is expanded when the PipelineRun is created.  In our example this is done when the **Run Pipeline** button is clicked.
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-user-supplied-variable
@@ -121,7 +121,7 @@ spec:
     - name: var
       description: var example
   resourcetemplates:
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
@@ -136,7 +136,7 @@ spec:
 Simnilarly the Pipeline has a parameter specification and the task is enhanced with a parameter expansion:
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-input-parameter-variable

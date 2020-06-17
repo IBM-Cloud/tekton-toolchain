@@ -1,5 +1,5 @@
 # no parameter use default
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: task-default-variable
@@ -10,7 +10,7 @@ spec:
       template:
         name: trigger-pipeline-no-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-pipeline-no-variable
@@ -36,7 +36,7 @@ spec:
 
 ---
 # hard code task variable in the pipeline
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: pipeline-supplied-variable
@@ -47,7 +47,7 @@ spec:
       template:
         name: trigger-pipeline-supplied-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-pipeline-supplied-variable
@@ -76,7 +76,7 @@ spec:
 
 ---
 # Pass variable from a user supplied Environment property in the Delivery Pipeline Tekton Configuration
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: user-defined-variable
@@ -87,12 +87,12 @@ spec:
       template:
         name: trigger-user-supplied-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
   name: simple-binding
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-user-supplied-variable
@@ -135,17 +135,16 @@ kind: Task
 metadata:
   name: the-var-task
 spec:
-  inputs:
-    params:
-      - name: var
-        description: var example in task
-        default: VALUE
+  params:
+    - name: var
+      description: var example in task
+      default: VALUE
   steps:
     - name: echoenvvar
       image: ubuntu
       env:
         - name: VAR
-          value: $(inputs.params.var)
+          value: $(params.var)
       command:
         - "/bin/bash"
       args:
@@ -156,22 +155,22 @@ spec:
       command:
         - /bin/echo
       args:
-        - $(inputs.params.var)
+        - $(params.var)
     - name: shellscript
       image: ubuntu
       env:
         - name: VAR
-          value: $(inputs.params.var)
+          value: $(params.var)
       command: ["/bin/bash", "-c"]
       args:
         - |
-          echo this looks just like a shell script and the '$ ( inputs.params.var ) ' is subbed in here: '$(inputs.params.var)'
+          echo this looks just like a shell script and the '$ ( params.var ) ' is subbed in here: '$(params.var)'
           env | grep VAR
           echo done with shellscript
 
 ---
 # Pass secret
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: user-defined-secret-variable
@@ -182,7 +181,7 @@ spec:
       template:
         name: trigger-user-supplied-secret-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-user-supplied-secret-variable
@@ -198,7 +197,7 @@ spec:
       type: Opaque
       stringData:
         secret_key: $(params.apikey)
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
