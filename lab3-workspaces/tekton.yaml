@@ -116,7 +116,7 @@ spec:
         name: pipelinerun-$(uid)
       spec:
         pipelineRef:
-            name: pipeline-workspace
+          name: pipeline-two-steps-share-dir
 
 ---
 apiVersion: tekton.dev/v1beta1
