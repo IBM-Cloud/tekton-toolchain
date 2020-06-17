@@ -229,6 +229,10 @@ spec:
             secretKeyRef:
               name: secret-object
               key: secret_key
+        - name: ibm-build-number
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
       command: ["/bin/bash", "-c"]
       args:
         - |
