@@ -15,7 +15,7 @@ Open the Delivery Pipeline again. Open **Configure Pipeline**. Select the **Defi
 Notice the **shared** directory. Check out the shared/tasks.yaml file in your clone:
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: clone-repo

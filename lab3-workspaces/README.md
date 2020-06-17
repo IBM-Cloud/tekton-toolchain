@@ -25,7 +25,7 @@ Open **Configure Pipeline**
 The trigger template will create a PersistentVolumeClaim (PVC) and a PipelineRun with a workspace that uses the workspace. Notice that \$(uid) is used to create a unique id for the PVC adn workspace.
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-workspace
@@ -42,7 +42,7 @@ spec:
         volumeMode: Filesystem
         accessModes:
           - ReadWriteOnce
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
@@ -59,7 +59,7 @@ spec:
 The workspace in the PipelineRun is named pipeline-workspace and is available in the Pipeline via the same name. Notice how it is referenced by name within the task list and available to the task by the name task-workspace.
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-workspace

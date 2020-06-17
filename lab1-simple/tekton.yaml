@@ -88,5 +88,5 @@ spec:
     command:
     - ls
     image: ubuntu
-    name: lsafter
+    name: lsafterfilemissing
 

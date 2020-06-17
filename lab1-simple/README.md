@@ -22,7 +22,7 @@ Visit the [IBM Cloud](https://cloud.ibm.com/) in your browser.  In the hamburger
 As you can see a toolchain is a landing page that holds integrated tools.  You have integrated two tools: GitHub and a Delivery Pipeline.
 
 Click the **Delivery Pipeline** to open.  Notice the context is in the Delivery Pipeline service just created.
-Click **Configure Pipeline** (if you do not see a Configure Pipeline button maybe you did not select Tekton when you created it)
+The Configuration page is likely displayed, if not click **Configure Pipeline** (if you do not see a Configure Pipeline button maybe you did not select Tekton when you created it)
 
 - Select the **Definitions** panel.  Definitions are going to define the set of tekton files that will contribute to this Delivery Pipeline Service.  Contribute all of the files in the **lab1-simple** path in your clone (I show my clone below):
 
@@ -36,14 +36,14 @@ Click **Configure Pipeline** (if you do not see a Configure Pipeline button mayb
   - Manual Trigger
   - EventListener: the-listener
 
-**Save** and then **Close** and you are back to the delivery pipeline: click **Run Pipeline** > Manual Trigger
+**Save** and then **Close** and you are back to the delivery pipeline: click **Run Pipeline** > Manual Trigger.  The **View the PipelineRun** link will take you to the results.
 
 This demonstrates some cool stuff.  All of the tekton files in the github [lab1-simple](https://github.com/IBM-Cloud/tekton-toolchain/tree/master/lab1-simple).  In this case it was just the [tekton.yaml](https://github.com/IBM-Cloud/tekton-toolchain/blob/master/lab1-simple/tekton.yaml) file but all files with a `.yaml` or `.yml` extension would have been read by the Delivery Pipeline service.
 
 - The name of the trigger in the drop down is the same as the EventListener in the lab1-simple/tekton.yaml file:
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: the-listener
@@ -53,7 +53,7 @@ metadata:
 Click on the log entry created and you will see `xx1` which matched the task name in the pipeline:
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline
@@ -65,7 +65,7 @@ spec:
 And you see the task steps that were executed. No surprises. The steps are commands executed in the associated container and give you a feel for the environment.  The `ubuntu` container was supplied by [hub.docker.com](https://hub.docker.com/_/ubuntu)
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: the-task
@@ -82,4 +82,4 @@ spec:
 ...
 ```
 
-Note that the last few steps show that the file system is preserved between steps. Experiment some more to verify that the working directory is not maintained across tasks.
+Note that the last few steps show that the file system is not preserved between steps.
