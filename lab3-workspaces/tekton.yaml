@@ -130,7 +130,13 @@ spec:
   workspaces:
   - name: pipeline-workspace
   tasks:
-    - name: two-steps-share-dir
+    - name: two-steps-share-dir1
+      workspaces:
+      - name: task-workspace
+        workspace: pipeline-workspace          
+      taskRef:
+        name: two-steps-share-dir
+    - name: two-steps-share-dir2
       workspaces:
       - name: task-workspace
         workspace: pipeline-workspace          
