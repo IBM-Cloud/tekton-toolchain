@@ -8,11 +8,8 @@ A workspace is a disk volume made available to a task.
 
 If continuing from the previous lab:
 
-A private worker will be needed to create a workspace.
-
 Open the **Pipeline Service**
 Open the **Delivery Pipeline**
-Open **Configure Pipeline**
 
 - Select the **Definitions** panel and edit to resemble the following:
 

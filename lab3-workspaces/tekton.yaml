@@ -76,7 +76,6 @@ metadata:
 spec:
   workspaces:
   - name: task-workspace 
-    # mountPath: /artifacts   
   steps:
     - name: echoenvvar
       image: ubuntu
@@ -85,6 +84,85 @@ spec:
         - |
           set -x
           echo 00 lab3
+          WS=$(workspaces.task-workspace.path)
+          ls $WS
+          cd $WS
+          echo hi >> hi
+          ls $WS
+          cat hi
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: workspace
+spec:
+  triggers:
+    - binding:
+        name: simple-binding
+      template:
+        name: trigger-two-steps-share-dir
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-two-steps-share-dir
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: pipelinerun-$(uid)
+      spec:
+        pipelineRef:
+            name: pipeline-workspace
+        workspaces:
+          - name: pipeline-workspace
+            persistentVolumeClaim:
+              claimName: pipelinerun-$(uid)-pvc
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-two-steps-share-dir
+spec:
+  tasks:
+    - name: two-steps-share-dir
+      taskRef:
+        name: two-steps-share-dir
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: two-steps-share-dir
+spec:
+  workspaces:
+  - name: task-workspace 
+    emptyDir: {}
+  steps:
+    - name: makehi
+      image: ubuntu
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          echo 01 lab3
+          WS=$(workspaces.task-workspace.path)
+          ls $WS
+          cd $WS
+          echo hi >> hi
+          ls $WS
+          cat hi
+    - name: seehi
+      image: ubuntu
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          echo 01 lab3
           WS=$(workspaces.task-workspace.path)
           ls $WS
           cd $WS
