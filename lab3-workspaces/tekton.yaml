@@ -145,7 +145,6 @@ metadata:
 spec:
   workspaces:
   - name: task-workspace 
-    emptyDir: {}
   steps:
     - name: makehi
       image: ubuntu
