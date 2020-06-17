@@ -1,0 +1,45 @@
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: workspace
+spec:
+  triggers:
+    - binding:
+        name: simple-binding
+      template:
+        name: trigger-workspace
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: simple-binding
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-workspace
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: TaskRun
+      metadata:
+        name: taskrun-$(uid)
+      spec:
+        taskRef:
+          name: task-workspace
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-workspace
+spec:
+  steps:
+    - name: echoenvvar
+      image: ubuntu
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          echo 00 lab6
