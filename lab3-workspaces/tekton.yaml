@@ -127,6 +127,8 @@ kind: Pipeline
 metadata:
   name: pipeline-two-steps-share-dir
 spec:
+  workspaces:
+  - name: pipeline-workspace
   tasks:
     - name: two-steps-share-dir
       workspaces:
