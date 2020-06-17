@@ -95,7 +95,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: workspace
+  name: trigger-two-steps-share-dir
 spec:
   triggers:
     - binding:
@@ -117,10 +117,6 @@ spec:
       spec:
         pipelineRef:
             name: pipeline-workspace
-        workspaces:
-          - name: pipeline-workspace
-            persistentVolumeClaim:
-              claimName: pipelinerun-$(uid)-pvc
 
 ---
 apiVersion: tekton.dev/v1beta1
