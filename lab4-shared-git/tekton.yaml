@@ -86,7 +86,6 @@ metadata:
 spec:
   workspaces:
   - name: task-workspace 
-    # mountPath: /artifacts   
   steps:
     - name: echoenvvar
       image: ubuntu

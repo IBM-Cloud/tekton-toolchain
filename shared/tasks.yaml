@@ -5,13 +5,12 @@ metadata:
 spec:
   workspaces:
   - name: artifacts 
-  inputs:
-    params:
-    - name: repository
-      description: the git repo url
-    - name: branch
-      description: the git branch
-      default: master
+  params:
+  - name: repository
+    description: the git repo url
+  - name: branch
+    description: the git branch
+    default: master
   steps:
     - name: clone
       image: ibmcom/pipeline-base-image

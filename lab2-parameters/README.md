@@ -153,10 +153,12 @@ spec:
         name: the-var-task
 ```
 
-To see this in action in the GUI click on Configure Pipeline:
-- Environment Properties - add Text property **var** with a value like `defined in environment properties`.  Save and Close.
+To see this in action in the GUI click on **Environment Properties**
+- add Text property **var** with a value like `defined in environment properties`
+- **Save**
+- **Run Pipeline** with the trigger **user-defined-variable**.
 
-Now **Run Pipeline** with the manual trigger **user-defined-variable**.  The environment properties that have a name matching the TriggerTemplate parameter specification will be expanded.  In our case the `var` environment property will be expanded in the PipelineRun
+The environment properties that have a name matching the TriggerTemplate parameter specification will be expanded.  In our case the `var` environment property will be expanded in the PipelineRun
 
 Check the output and verify the parameters were passed through correctly.
 
@@ -200,6 +202,7 @@ spec:
               key: secret_key
 ```
 
-To see this in action in the GUI click on Configure Pipeline:
-- Environment Properties - add a Secure property **apikey** with a value like `veryprivate`
-- Triggers - add a Manual trigger for user-defined-secret
+To see this in action in the GUI click on **Environment Properties**
+- add Secure property **apikey** with a value like `veryprivate`
+- **Save**
+- **Run Pipeline** with the trigger **user-defined-secret-variable**.
