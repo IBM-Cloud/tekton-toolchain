@@ -17,6 +17,8 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
+          set -x
+          echo 00 version
           WS=$(workspaces.artifacts.path)
           REPOSITORY=$(inputs.params.repository)
           BRANCH=$(inputs.params.branch)

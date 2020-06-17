@@ -94,8 +94,9 @@ spec:
         - |
           set -x
           WS=$(workspaces.task-workspace.path)
-          LAB=lab4-git
+          LAB=lab4-shared-git
           ls $WS
           cd $WS
+          ls tekton
           echo testing
           [ "$(./tekton/$LAB/script.bash)" = "worked" ] || exit 1
