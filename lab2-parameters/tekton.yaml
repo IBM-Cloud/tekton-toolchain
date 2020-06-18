@@ -266,37 +266,37 @@ metadata:
   name: the-var-task
 spec:
   params:
-    - name: var
-      description: var example in task
-      default: VALUE
-  steps:
-    - name: echoenvvar
-      image: ubuntu
-      env:
-        - name: VAR
-          value: $(params.var)
-      command:
-        - "/bin/bash"
-      args:
-        - "-c"
-        - "echo 01 lab2 env VAR: $VAR"
-    - name: echovar
-      image: ubuntu
-      command:
-        - /bin/echo
-      args:
-        - $(params.var)
-    - name: shellscript
-      image: ubuntu
-      env:
-        - name: VAR
-          value: $(params.var)
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          echo this looks just like a shell script and the '$ ( params.var ) ' is subbed in here: '$(params.var)'
-          env | grep VAR
-          echo done with shellscript
+  - name: var
+    description: var example in task
+    default: VALUE
+steps:
+  - name: echoenvvar
+    image: ubuntu
+    env:
+    - name: VAR
+      value: $(params.var)
+    command:
+    - "/bin/bash"
+    args:
+    - "-c"
+    - "echo 01 lab2 env VAR: $VAR"
+  - name: echovar
+    image: ubuntu
+    command:
+    - /bin/echo
+    args:
+    - $(params.var)
+  - name: shellscript
+    image: ubuntu
+    env:
+    - name: VAR
+      value: $(params.var)
+    command: ["/bin/bash", "-c"]
+    args:
+    - |
+      echo this looks just like a shell script and the '$ ( params.var ) ' is subbed in here: '$(params.var)'
+      env | grep VAR
+      echo done with shellscript
 
 ---
 # Pass secret
