@@ -281,7 +281,7 @@ spec:
   steps:
     - name: shellscript
       image: ubuntu
-      envFrom:
+      env:
         - name: ibm-build-number
           valueFrom:
             fieldRef:
