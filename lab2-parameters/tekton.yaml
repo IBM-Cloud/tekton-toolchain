@@ -281,6 +281,39 @@ spec:
   steps:
     - name: shellscript
       image: ubuntu
+      env:
+        - name: ibm-build-number
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
+        - name: ibm-listener
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/listener']
+        - name: ibm-pipeline-id
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-id']
+        - name: ibm-trigger-name
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/trigger-name']
+        - name: ibm-trigger-type
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/trigger-type']
+        - name: ibm-triggered-by
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/triggered-by']
+        - name: ibm-pipeline-run-url
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-run-url']
+        - name: ibm-tekton-pipeline
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/tekton-pipeline']
       command: ["/bin/bash", "-c"]
       args:
         - |
