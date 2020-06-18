@@ -5,10 +5,10 @@ metadata:
   name: n010-task-environment
 spec:
   triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-pipeline-task-environment
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-pipeline-task-environment
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
@@ -132,7 +132,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: task-default-variable
+  name: n020-task-default-variable
 spec:
   triggers:
     - binding:
@@ -169,7 +169,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: pipeline-supplied-variable
+  name: n030-pipeline-supplied-variable
 spec:
   triggers:
     - binding:
@@ -209,7 +209,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: user-defined-variable
+  name: n040-user-defined-variable
 spec:
   triggers:
     - binding:
@@ -303,7 +303,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: user-defined-secret-variable
+  name: n050-user-defined-secret-variable
 spec:
   triggers:
     - binding:
