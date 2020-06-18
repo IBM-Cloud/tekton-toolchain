@@ -37,17 +37,56 @@ spec:
     - name: individualpropertiesandsecureproperty
       image: ubuntu
       env:
-        - name: apikey
+        - name: NAMEapikey
           valueFrom:
             secretKeyRef:
               name: secure-properties
               key: apikey
-        - name: var
+        - name: NAMEvar
           valueFrom:
             configMapKeyRef:
               name: environment-properties
               key: var  
+        - name: NAMEtextarea
+          valueFrom:
+            configMapKeyRef:
+              name: environment-properties
+              key: textarea  
 ```
+
+If the Task step can use the identically named properties and secrets you can add them without renaming:
+
+Properties:
+```
+      envFrom:
+        - configMapRef:
+            name: environment-properties
+```
+Secrets:
+```
+      envFrom:
+        - secretRef:
+            name: secure-properties     
+```
+
+There area also some handy properties that may help you out.  Check out the docs [Tekton Pipelines environment and resources](https://cloud.ibm.com/docs/ContinuousDelivery?topic=ContinuousDelivery-tekton_environment) for the full list
+      env:
+        - name: ibm-build-number
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
+
+
+To see this in action in the GUI click on **Environment Properties**
+- add **Text property** `var` with a value like `defined in environment properties`
+- add **Text area property** `textarea` with a value like `text area with some new lines`
+- add **Secure property area property** `apikey` with a value like `very secure`
+- **Save**
+- **Run Pipeline** with the trigger **user-defined-variable**.
+
+The environment properties that have a name matching the TriggerTemplate parameter specification will be expanded.  In our case the `var` environment property will be expanded in the PipelineRun
+
+Check the output and verify the parameters were passed through correctly.
 
 
 ## Parameter for a task
@@ -178,15 +217,6 @@ spec:
       taskRef:
         name: the-var-task
 ```
-
-To see this in action in the GUI click on **Environment Properties**
-- add Text property **var** with a value like `defined in environment properties`
-- **Save**
-- **Run Pipeline** with the trigger **user-defined-variable**.
-
-The environment properties that have a name matching the TriggerTemplate parameter specification will be expanded.  In our case the `var` environment property will be expanded in the PipelineRun
-
-Check the output and verify the parameters were passed through correctly.
 
 ## Secrets
 
