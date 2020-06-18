@@ -236,6 +236,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          echo 05 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
+          env
+          echo 06 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
           echo echo $API_KEY | od -a
           echo done
