@@ -17,15 +17,16 @@ Open **Configure Pipeline**
 | https://github.com/powellquiring/tekton | master | lab2-parameters |
 
 - Select the **Triggers** panel and add manual triggers for all EventListeners.  Name the trigger the same as the EventListener name.  This will result in the following:
-  - task-default-variable
-  - pipeline-supplied-variable
-  - user-defined-variable
-  - user-defined-secret-variable
+  - n010-task-environment
+  - n020-task-default-variable
+  - n030-pipeline-supplied-variable
+  - n040-user-defined-variable
+  - n050-user-defined-secret-variable
 
 Hit **Save**.
 
 ## Environment for a Task
-The **Enviroment properties** stored in the pipeline configuration can be placed directly into the environment of a Task.  Notice that the **Secure property** is referenced through secretKeyRef and secure-properties while the **Text property** and **Text area property** are accessed through configMapKeyRef and environment-properties:
+The **Enviroment properties** stored in the console UI pipeline configuration can be placed directly into the environment of a Task.  Notice that the **Secure property** is referenced through secretKeyRef and secure-properties while the **Text property** and **Text area property** are accessed through configMapKeyRef and environment-properties in the code below:
 
 ```
 apiVersion: tekton.dev/v1beta1
@@ -54,7 +55,7 @@ spec:
               key: textarea  
 ```
 
-If the Task step can use the identically named properties and secrets you can add them without renaming:
+If the Task step can use the identically named properties and secrets you can add them all without renaming:
 
 Properties:
 ```
@@ -82,7 +83,7 @@ To see this in action in the GUI click on **Environment Properties**
 - add **Text area property** `textarea` with a value like `text area with some new lines`
 - add **Secure property area property** `apikey` with a value like `veryprivate`
 - **Save**
-- **Run Pipeline** with the trigger **user-defined-variable**.
+- **Run Pipeline** with the trigger **n010-task-environment**.
 
 The environment properties that have a name matching the TriggerTemplate parameter specification will be expanded.  In our case the `var` environment property will be expanded in the PipelineRun
 
@@ -133,7 +134,7 @@ spec:
           echo done with shellscript
 ```
 
-Click the **Run Pipeline** and choose task-default-variable and when it completes click on the pipeline run results to see the following output:
+Click the **Run Pipeline** and choose n020-task-default-variable and when it completes click on the pipeline run results to see the following output:
 
 ```
 [pdv : echoenvvar]
@@ -170,7 +171,7 @@ spec:
       taskRef:
         name: the-var-task
 ```
-The Pipeline task is supplying parameters to the same `the-var-task`.  Click **Run Pipeline** and chose pipeline-supplied-variable and check out the results.
+The Pipeline task is supplying parameters to the same `the-var-task`.  Click **Run Pipeline** and chose n030-pipeline-supplied-variable and check out the results.
 
 ## Parameters from a user to a task
 
@@ -217,6 +218,8 @@ spec:
       taskRef:
         name: the-var-task
 ```
+To see this in action in the GUI click on **Environment Properties**
+- **Run Pipeline** with the trigger **n040-user-defined-variable**.
 
 ## Secrets
 
@@ -259,6 +262,4 @@ spec:
 ```
 
 To see this in action in the GUI click on **Environment Properties**
-- add Secure property **apikey** with a value like `veryprivate`
-- **Save**
-- **Run Pipeline** with the trigger **user-defined-secret-variable**.
+- **Run Pipeline** with the trigger **n050-user-defined-secret-variable**.
