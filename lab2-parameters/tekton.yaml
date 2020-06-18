@@ -237,10 +237,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.annotations['devops.cloud.ibm.com/listener']
-        - name: ibm-tekton-pipeline-id
+        - name: ibm-pipeline-id
           valueFrom:
             fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/tekton-pipeline-id']
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-id']
         - name: ibm-trigger-name
           valueFrom:
             fieldRef:
