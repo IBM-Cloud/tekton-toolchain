@@ -135,10 +135,10 @@ metadata:
   name: n020-task-default-variable
 spec:
   triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-pipeline-no-variable
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-pipeline-no-variable
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
@@ -146,13 +146,13 @@ metadata:
   name: trigger-pipeline-no-variable
 spec:
   resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        name: pipelinerun-$(uid)
-      spec:
-        pipelineRef:
-          name: pipeline-no-variable
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: pipelinerun-$(uid)
+    spec:
+      pipelineRef:
+        name: pipeline-no-variable
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
@@ -160,9 +160,9 @@ metadata:
   name: pipeline-no-variable
 spec:
   tasks:
-    - name: pdv
-      taskRef:
-        name: the-var-task
+  - name: pdv
+    taskRef:
+      name: the-var-task
 
 ---
 # hard code task variable in the pipeline
@@ -172,10 +172,10 @@ metadata:
   name: n030-pipeline-supplied-variable
 spec:
   triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-pipeline-supplied-variable
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-pipeline-supplied-variable
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
@@ -183,13 +183,13 @@ metadata:
   name: trigger-pipeline-supplied-variable
 spec:
   resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        name: pipelinerun-$(uid)
-      spec:
-        pipelineRef:
-          name: pipeline-supplied-variable
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: pipelinerun-$(uid)
+    spec:
+      pipelineRef:
+        name: pipeline-supplied-variable
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
@@ -197,12 +197,12 @@ metadata:
   name: pipeline-supplied-variable
 spec:
   tasks:
-    - name: pdv
-      params:
-        - name: var
-          value: PIPELINE_SUPPLIED
-      taskRef:
-        name: the-var-task
+  - name: pdv
+    params:
+    - name: var
+      value: PIPELINE_SUPPLIED
+    taskRef:
+      name: the-var-task
 
 ---
 # Pass variable from a user supplied Environment property in the Delivery Pipeline Tekton Configuration
@@ -212,10 +212,10 @@ metadata:
   name: n040-user-defined-variable
 spec:
   triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-user-supplied-variable
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-user-supplied-variable
 ---
 apiVersion: tekton.dev/v1beta1
 kind: TriggerBinding
@@ -228,19 +228,19 @@ metadata:
   name: trigger-user-supplied-variable
 spec:
   params:
-    - name: var
-      description: var example
+  - name: var
+    description: var example
   resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        name: pipelinerun-$(uid)
-      spec:
-        pipelineRef:
-          name: pipeline-input-parameter-variable
-        params:
-          - name: var
-            value: $(params.var)
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: pipelinerun-$(uid)
+    spec:
+      pipelineRef:
+        name: pipeline-input-parameter-variable
+      params:
+      - name: var
+        value: $(params.var)
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
@@ -248,15 +248,15 @@ metadata:
   name: pipeline-input-parameter-variable
 spec:
   params:
-    - name: var
-      description: var example in pipeline
+  - name: var
+    description: var example in pipeline
   tasks:
-    - name: pdv
-      params:
-        - name: var
-          value: $(params.var)
-      taskRef:
-        name: the-var-task
+  - name: pdv
+    params:
+    - name: var
+      value: $(params.var)
+    taskRef:
+      name: the-var-task
 
 ---
 # shared task
