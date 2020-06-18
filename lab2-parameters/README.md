@@ -1,6 +1,6 @@
 # lab 2 parameters
 
-This lab focuses on parameters and secrets
+This lab focuses on parameters and secrets.  There are a few different ways to parameterize tasks so skim all of the possibilities and drill down on the one that meets your needs.
 
 ## Turn on github building
 
@@ -23,6 +23,9 @@ Open **Configure Pipeline**
   - user-defined-secret-variable
 
 Hit **Save**.
+
+## Environment for a Task
+Secrets and properties can be directly
 
 ## Parameter for a task
 

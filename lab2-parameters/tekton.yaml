@@ -292,12 +292,18 @@ spec:
             configMapKeyRef:
               name: environment-properties
               key: var  
+        - name: textarea
+          valueFrom:
+            configMapKeyRef:
+              name: environment-properties
+              key: textarea  
       command: ["/bin/bash", "-c"]
       args:
         - |
           set -x
           env
           echo $apikey | od -a
+          echo "$textarea" | od -a
     - name: allproperties
       image: ubuntu
       envFrom:
