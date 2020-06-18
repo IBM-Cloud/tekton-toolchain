@@ -25,7 +25,30 @@ Open **Configure Pipeline**
 Hit **Save**.
 
 ## Environment for a Task
-Secrets and properties can be directly
+The **Enviroment properties** stored in the pipeline configuration can be placed directly into the environment of a Task.  Notice that the **Secure property** is referenced through secretKeyRef and secure-properties while the **Text property** and **Text area property** are accessed through configMapKeyRef and environment-properties:
+
+```
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-ibm
+spec:
+  steps:
+    - name: individualpropertiesandsecureproperty
+      image: ubuntu
+      env:
+        - name: apikey
+          valueFrom:
+            secretKeyRef:
+              name: secure-properties
+              key: apikey
+        - name: var
+          valueFrom:
+            configMapKeyRef:
+              name: environment-properties
+              key: var  
+```
+
 
 ## Parameter for a task
 

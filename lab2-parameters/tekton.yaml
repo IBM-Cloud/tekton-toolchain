@@ -279,20 +279,20 @@ metadata:
   name: task-ibm
 spec:
   steps:
-    - name: individualpropertyandsecureproperty
+    - name: individualpropertiesandsecureproperty
       image: ubuntu
       env:
-        - name: apikey
+        - name: NAMEapikey
           valueFrom:
             secretKeyRef:
               name: secure-properties
               key: apikey
-        - name: var
+        - name: NAMEvar
           valueFrom:
             configMapKeyRef:
               name: environment-properties
               key: var  
-        - name: textarea
+        - name: NAMEtextarea
           valueFrom:
             configMapKeyRef:
               name: environment-properties
@@ -302,8 +302,8 @@ spec:
         - |
           set -x
           env
-          echo $apikey | od -a
-          echo "$textarea" | od -a
+          echo $NAMEapikey | od -a
+          echo "$NAMEtextarea" | od -a
     - name: allproperties
       image: ubuntu
       envFrom:
