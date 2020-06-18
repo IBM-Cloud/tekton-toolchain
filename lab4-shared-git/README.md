@@ -9,13 +9,13 @@ A git clone task will be created in this lab. It is generally useful so it will 
 Open the Delivery Pipeline again. Open **Configure Pipeline**. Select the **Definitions** panel and edit to resemble the following:
 |Repository|Branch|Path|
 |-|-|-|
-|https://github.com/powellquiring/tekton-toolchain|master|lab4-git|
+|https://github.com/powellquiring/tekton-toolchain|master|lab4-shared-git|
 |https://github.com/powellquiring/tekton-toolchain|master|shared|
 
 Notice the **shared** directory. Check out the shared/tasks.yaml file in your clone:
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: clone-repo

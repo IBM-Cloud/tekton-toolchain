@@ -1,6 +1,6 @@
 # lab 2 parameters
 
-This lab focuses on parameters and secrets
+This lab focuses on parameters and secrets.  There are a few different ways to parameterize tasks so skim all of the possibilities and drill down on the one that meets your needs.
 
 ## Turn on github building
 
@@ -10,19 +10,85 @@ Open the **Pipeline Service**
 Open the **Delivery Pipeline**
 Open **Configure Pipeline**
 
-- Select the **Definitions** panel and edit to resemble the following:
+- Select the **Definitions** panel and edit to resemble the following.  Note the Path change from the previous lab:
 
 | Repository                              | Branch | Path            |
 | --------------------------------------- | ------ | --------------- |
 | https://github.com/powellquiring/tekton | master | lab2-parameters |
 
-- Select the **Triggers** panel and add manual triggers for all EventListeners.  Name them the trigger the same as the EventListener name.  This will result in the following:
-  - task-default-variable
-  - pipeline-supplied-variable
-  - user-defined-variable
-  - user-defined-secret-variable
+- Select the **Triggers** panel and add manual triggers for all EventListeners.  Name the trigger the same as the EventListener name.  This will result in the following:
+  - n010-task-environment
+  - n020-task-default-variable
+  - n030-pipeline-supplied-variable
+  - n040-user-defined-variable
+  - n050-user-defined-secret-variable
 
-Hit close to return to the Delivery Pipeline Dashboard
+Hit **Save**.
+
+## Environment for a Task
+The **Enviroment properties** stored in the console UI pipeline configuration can be placed directly into the environment of a Task.  Notice that the **Secure property** is referenced through secretKeyRef and secure-properties while the **Text property** and **Text area property** are accessed through configMapKeyRef and environment-properties in the code below:
+
+```
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-ibm
+spec:
+  steps:
+    - name: individualpropertiesandsecureproperty
+      image: ubuntu
+      env:
+        - name: NAMEapikey
+          valueFrom:
+            secretKeyRef:
+              name: secure-properties
+              key: apikey
+        - name: NAMEvar
+          valueFrom:
+            configMapKeyRef:
+              name: environment-properties
+              key: var  
+        - name: NAMEtextarea
+          valueFrom:
+            configMapKeyRef:
+              name: environment-properties
+              key: textarea  
+```
+
+If the Task step can use the identically named properties and secrets you can add them all without renaming:
+
+Properties:
+```
+      envFrom:
+        - configMapRef:
+            name: environment-properties
+```
+Secrets:
+```
+      envFrom:
+        - secretRef:
+            name: secure-properties     
+```
+
+There area also some handy properties that may help you out.  Check out the docs [Tekton Pipelines environment and resources](https://cloud.ibm.com/docs/ContinuousDelivery?topic=ContinuousDelivery-tekton_environment) for the full list
+      env:
+        - name: ibm-build-number
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
+
+
+To see this in action in the GUI click on **Environment Properties**
+- add **Text property** `var` with a value like `defined in environment properties`
+- add **Text area property** `textarea` with a value like `text area with some new lines`
+- add **Secure property area property** `apikey` with a value like `veryprivate`
+- **Save**
+- **Run Pipeline** with the trigger **n010-task-environment**.
+
+The environment properties that have a name matching the TriggerTemplate parameter specification will be expanded.  In our case the `var` environment property will be expanded in the PipelineRun
+
+Check the output and verify the parameters were passed through correctly.
+
 
 ## Parameter for a task
 
@@ -68,7 +134,7 @@ spec:
           echo done with shellscript
 ```
 
-Click the **Run Pipeline** and choose task-default-variable and when it completes click on the pipeline run results to see the following output:
+Click the **Run Pipeline** and choose n020-task-default-variable and when it completes click on the pipeline run results to see the following output:
 
 ```
 [pdv : echoenvvar]
@@ -92,7 +158,7 @@ In the `shellscript` step notice the string `$(inputs.params.var)` substitution 
 But how do I get parameters to the task? In the pipeline:
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-supplied-variable
@@ -105,14 +171,14 @@ spec:
       taskRef:
         name: the-var-task
 ```
-The Pipeline task is supplying parameters to the same `the-var-task`.  Click **Run Pipeline** and chose pipeline-supplied-variable and check out the results.
+The Pipeline task is supplying parameters to the same `the-var-task`.  Click **Run Pipeline** and chose n030-pipeline-supplied-variable and check out the results.
 
 ## Parameters from a user to a task
 
 How do I get them parameterized from a user clicking in the Delivery Pipeline? A parameter specification is declared in the TriggerTemplate and can be referenced using `$(param.var)`.  The PipelineRun parameter, `$(param.var)`, is expanded when the PipelineRun is created.  In our example this is done when the **Run Pipeline** button is clicked.
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-user-supplied-variable
@@ -121,7 +187,7 @@ spec:
     - name: var
       description: var example
   resourcetemplates:
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
@@ -136,7 +202,7 @@ spec:
 Simnilarly the Pipeline has a parameter specification and the task is enhanced with a parameter expansion:
 
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-input-parameter-variable
@@ -152,13 +218,8 @@ spec:
       taskRef:
         name: the-var-task
 ```
-
-To see this in action in the GUI click on Configure Pipeline:
-- Environment Properties - add Text property **var** with a value like `defined in environment properties`.  Save and Close.
-
-Now **Run Pipeline** with the manual trigger **user-defined-variable**.  The environment properties that have a name matching the TriggerTemplate parameter specification will be expanded.  In our case the `var` environment property will be expanded in the PipelineRun
-
-Check the output and verify the parameters were passed through correctly.
+To see this in action in the GUI click on **Environment Properties**
+- **Run Pipeline** with the trigger **n040-user-defined-variable**.
 
 ## Secrets
 
@@ -200,6 +261,5 @@ spec:
               key: secret_key
 ```
 
-To see this in action in the GUI click on Configure Pipeline:
-- Environment Properties - add a Secure property **apikey** with a value like `veryprivate`
-- Triggers - add a Manual trigger for user-defined-secret
+To see this in action in the GUI click on **Environment Properties**
+- **Run Pipeline** with the trigger **n050-user-defined-secret-variable**.

@@ -87,7 +87,7 @@ For example the classic DEPLOY job:
 
 Remember the .tekton/ directory will contain the tekton files and now we are back to familiar territory.  all.yaml:
 ```
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: DEPLOY
@@ -98,7 +98,7 @@ spec:
     template:
       name: tt-common
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
   name: pipeline-DEPLOY

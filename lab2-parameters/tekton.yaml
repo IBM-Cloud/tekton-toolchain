@@ -1,28 +1,158 @@
-# no parameter use default
-apiVersion: tekton.dev/v1alpha1
+# ibm
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: task-default-variable
+  name: n010-task-environment
 spec:
   triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-pipeline-no-variable
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-pipeline-task-environment
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-pipeline-task-environment
+spec:
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: pipelinerun-$(uid)
+    spec:
+      pipelineRef:
+        name: pipeline-task-environment
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-task-environment
+spec:
+  tasks:
+    - name: pdv
+      taskRef:
+        name: task-task-environment
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-task-environment
+spec:
+  steps:
+  - name: individualpropertiesandsecureproperty
+    image: ubuntu
+    env:
+    - name: NAMEapikey
+      valueFrom:
+        secretKeyRef:
+          name: secure-properties
+          key: apikey
+    - name: NAMEvar
+      valueFrom:
+        configMapKeyRef:
+          name: environment-properties
+          key: var  
+    - name: NAMEtextarea
+      valueFrom:
+        configMapKeyRef:
+          name: environment-properties
+          key: textarea  
+    command: ["/bin/bash", "-c"]
+    args:
+    - |
+      set -x
+      env
+      echo $NAMEapikey | od -a
+      echo "$NAMEtextarea" | od -a
+  - name: allproperties
+    image: ubuntu
+    envFrom:
+    - configMapRef:
+        name: environment-properties
+    command: ["/bin/bash", "-c"]
+    args:
+    - |
+      set -x
+      env
+  - name: allsecretproperties
+    image: ubuntu
+    envFrom:
+    - secretRef:
+        name: secure-properties     
+    command: ["/bin/bash", "-c"]
+    args:
+      - |
+        set -x
+        env
+        echo $apikey | od -a
+  - name: annotations
+    image: ubuntu
+    env:
+    - name: ibm-build-number
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
+    - name: ibm-listener
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['devops.cloud.ibm.com/listener']
+    - name: ibm-pipeline-id
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-id']
+    - name: ibm-trigger-name
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['devops.cloud.ibm.com/trigger-name']
+    - name: ibm-trigger-type
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['devops.cloud.ibm.com/trigger-type']
+    - name: ibm-triggered-by
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['devops.cloud.ibm.com/triggered-by']
+    - name: ibm-pipeline-run-url
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-run-url']
+    - name: ibm-tekton-pipeline
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.annotations['devops.cloud.ibm.com/tekton-pipeline']
+    command: ["/bin/bash", "-c"]
+    args:
+    - |
+      echo 00 annotations
+      env
+
+---
+# no parameter use default
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: n020-task-default-variable
+spec:
+  triggers:
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-pipeline-no-variable
+---
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-pipeline-no-variable
 spec:
   resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        name: pipelinerun-$(uid)
-      spec:
-        pipelineRef:
-          name: pipeline-no-variable
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: pipelinerun-$(uid)
+    spec:
+      pipelineRef:
+        name: pipeline-no-variable
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
@@ -30,36 +160,36 @@ metadata:
   name: pipeline-no-variable
 spec:
   tasks:
-    - name: pdv
-      taskRef:
-        name: the-var-task
+  - name: pdv
+    taskRef:
+      name: the-var-task
 
 ---
 # hard code task variable in the pipeline
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: pipeline-supplied-variable
+  name: n030-pipeline-supplied-variable
 spec:
   triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-pipeline-supplied-variable
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-pipeline-supplied-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-pipeline-supplied-variable
 spec:
   resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        name: pipelinerun-$(uid)
-      spec:
-        pipelineRef:
-          name: pipeline-supplied-variable
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: pipelinerun-$(uid)
+    spec:
+      pipelineRef:
+        name: pipeline-supplied-variable
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
@@ -67,50 +197,50 @@ metadata:
   name: pipeline-supplied-variable
 spec:
   tasks:
-    - name: pdv
-      params:
-        - name: var
-          value: PIPELINE_SUPPLIED
-      taskRef:
-        name: the-var-task
+  - name: pdv
+    params:
+    - name: var
+      value: PIPELINE_SUPPLIED
+    taskRef:
+      name: the-var-task
 
 ---
 # Pass variable from a user supplied Environment property in the Delivery Pipeline Tekton Configuration
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: user-defined-variable
+  name: n040-user-defined-variable
 spec:
   triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-user-supplied-variable
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-user-supplied-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
   name: simple-binding
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-user-supplied-variable
 spec:
   params:
-    - name: var
-      description: var example
+  - name: var
+    description: var example
   resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        name: pipelinerun-$(uid)
-      spec:
-        pipelineRef:
-          name: pipeline-input-parameter-variable
-        params:
-          - name: var
-            value: $(params.var)
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: pipelinerun-$(uid)
+    spec:
+      pipelineRef:
+        name: pipeline-input-parameter-variable
+      params:
+      - name: var
+        value: $(params.var)
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
@@ -118,15 +248,15 @@ metadata:
   name: pipeline-input-parameter-variable
 spec:
   params:
-    - name: var
-      description: var example in pipeline
+  - name: var
+    description: var example in pipeline
   tasks:
-    - name: pdv
-      params:
-        - name: var
-          value: $(params.var)
-      taskRef:
-        name: the-var-task
+  - name: pdv
+    params:
+    - name: var
+      value: $(params.var)
+    taskRef:
+      name: the-var-task
 
 ---
 # shared task
@@ -135,76 +265,75 @@ kind: Task
 metadata:
   name: the-var-task
 spec:
-  inputs:
-    params:
-      - name: var
-        description: var example in task
-        default: VALUE
+  params:
+  - name: var
+    description: var example in task
+    default: VALUE
   steps:
     - name: echoenvvar
       image: ubuntu
       env:
-        - name: VAR
-          value: $(inputs.params.var)
+      - name: VAR
+        value: $(params.var)
       command:
-        - "/bin/bash"
+      - "/bin/bash"
       args:
-        - "-c"
-        - "echo 01 lab2 env VAR: $VAR"
+      - "-c"
+      - "echo 01 lab2 env VAR: $VAR"
     - name: echovar
       image: ubuntu
       command:
-        - /bin/echo
+      - /bin/echo
       args:
-        - $(inputs.params.var)
+      - $(params.var)
     - name: shellscript
       image: ubuntu
       env:
-        - name: VAR
-          value: $(inputs.params.var)
+      - name: VAR
+        value: $(params.var)
       command: ["/bin/bash", "-c"]
       args:
-        - |
-          echo this looks just like a shell script and the '$ ( inputs.params.var ) ' is subbed in here: '$(inputs.params.var)'
-          env | grep VAR
-          echo done with shellscript
+      - |
+        echo this looks just like a shell script and the '$ ( params.var ) ' is subbed in here: '$(params.var)'
+        env | grep VAR
+        echo done with shellscript
 
 ---
 # Pass secret
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
-  name: user-defined-secret-variable
+  name: n050-user-defined-secret-variable
 spec:
   triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-user-supplied-secret-variable
+  - binding:
+      name: simple-binding
+    template:
+      name: trigger-user-supplied-secret-variable
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-user-supplied-secret-variable
 spec:
   params:
-    - name: apikey
-      description: the ibmcloud api key
+  - name: apikey
+    description: the ibmcloud api key
   resourcetemplates:
-    - apiVersion: v1
-      kind: Secret
-      metadata:
-        name: secret-object
-      type: Opaque
-      stringData:
-        secret_key: $(params.apikey)
-    - apiVersion: tekton.dev/v1alpha1
-      kind: PipelineRun
-      metadata:
-        name: pipelinerun-$(uid)
-      spec:
-        pipelineRef:
-          name: pipeline-secret
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: secret-object
+    type: Opaque
+    stringData:
+      secret_key: $(params.apikey)
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: pipelinerun-$(uid)
+    spec:
+      pipelineRef:
+        name: pipeline-secret
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
@@ -212,9 +341,9 @@ metadata:
   name: pipeline-secret
 spec:
   tasks:
-    - name: pipelinesecret
-      taskRef:
-        name: secret-env-task
+  - name: pipelinesecret
+    taskRef:
+      name: secret-env-task
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
@@ -222,17 +351,18 @@ metadata:
   name: secret-env-task
 spec:
   steps:
-    - name: echoenvvar
-      image: ubuntu
-      env:
-        - name: API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: secret-object
-              key: secret_key
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          echo 05 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
-          echo echo $API_KEY | od -a
-          echo done
+  - name: echoenvvar
+    image: ubuntu
+    env:
+    - name: API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: secret-object
+          key: secret_key
+    command: ["/bin/bash", "-c"]
+    args:
+    - |
+      env
+      echo 00 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
+      echo $API_KEY | od -a
+      echo done

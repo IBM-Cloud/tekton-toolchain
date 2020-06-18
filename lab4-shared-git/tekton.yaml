@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: workspace
@@ -9,13 +9,13 @@ spec:
       template:
         name: trigger-workspace
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
   name: simple-binding
 
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
   name: trigger-workspace
@@ -32,7 +32,7 @@ spec:
         volumeMode: Filesystem
         accessModes:
           - ReadWriteOnce
-    - apiVersion: tekton.dev/v1alpha1
+    - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
         name: pipelinerun-$(uid)
@@ -45,7 +45,7 @@ spec:
               claimName: pipelinerun-$(uid)-pvc
 
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: pipeline-workspace
@@ -79,14 +79,13 @@ spec:
     - clone
 
 ---
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: task-workspace
 spec:
   workspaces:
   - name: task-workspace 
-    # mountPath: /artifacts   
   steps:
     - name: echoenvvar
       image: ubuntu
@@ -95,8 +94,9 @@ spec:
         - |
           set -x
           WS=$(workspaces.task-workspace.path)
-          LAB=lab4-git
+          LAB=lab4-shared-git
           ls $WS
           cd $WS
+          ls tekton
           echo testing
           [ "$(./tekton/$LAB/script.bash)" = "worked" ] || exit 1
