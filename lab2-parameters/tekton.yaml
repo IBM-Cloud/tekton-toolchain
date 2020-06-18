@@ -279,7 +279,47 @@ metadata:
   name: task-ibm
 spec:
   steps:
-    - name: shellscript
+    - name: individualpropertyandsecureproperty
+      image: ubuntu
+      env:
+        - name: apikey
+          valueFrom:
+            secretKeyRef:
+              name: secure-properties
+              key: apikey
+        - name: var
+          valueFrom:
+            configMapKeyRef:
+              name: environment-properties
+              key: var  
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          env
+          echo $apikey | od -a
+    - name: allproperties
+      image: ubuntu
+      envFrom:
+        - configMapRef:
+            name: environment-properties
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          env
+    - name: allsecretproperties
+      image: ubuntu
+      envFrom:
+        - secretRef:
+            name: secure-properties     
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          env
+          echo $apikey | od -a
+    - name: annotations
       image: ubuntu
       env:
         - name: ibm-build-number
@@ -314,13 +354,9 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.annotations['devops.cloud.ibm.com/tekton-pipeline']
-      envFrom:
-        - configMapRef:
-            name: environment-properties
-        - secretRef:
-            name: secure-properties     
       command: ["/bin/bash", "-c"]
       args:
         - |
-          echo 03
+          echo 00 annotations
           env
+
