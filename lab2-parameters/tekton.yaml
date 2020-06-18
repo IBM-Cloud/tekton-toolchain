@@ -236,3 +236,54 @@ spec:
           echo 06 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
           echo echo $API_KEY | od -a
           echo done
+---
+# ibm
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: ibm-task
+spec:
+  triggers:
+    - binding:
+        name: simple-binding
+      template:
+        name: trigger-pipeline-ibm
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-pipeline-ibm
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: pipelinerun-$(uid)
+      spec:
+        pipelineRef:
+          name: pipeline-ibm
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-ibm
+spec:
+  tasks:
+    - name: pdv
+      taskRef:
+        name: task-ibm
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-ibm
+spec:
+  steps:
+    - name: shellscript
+      image: ubuntu
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          echo 00
+          env
+
