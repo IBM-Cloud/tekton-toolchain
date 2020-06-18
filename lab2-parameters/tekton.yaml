@@ -229,6 +229,59 @@ spec:
             secretKeyRef:
               name: secret-object
               key: secret_key
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          env
+          echo 06 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
+          echo echo $API_KEY | od -a
+          echo done
+---
+# Environment and Secret in task
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: listener-cm-secrets-propse
+spec:
+  triggers:
+    - binding:
+        name: simple-binding
+      template:
+        name: trigger-cm-secrets-propse
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-cm-secrets-propse
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: pipelinerun-$(uid)
+      spec:
+        pipelineRef:
+          name: pipeline-cm-show-full-env
+
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-cm-show-full-env
+spec:
+  tasks:
+    - name: cm-show-full-env
+      taskRef:
+        name: cm-show-full-env
+
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: cm-secrets-props
+spec:
+  steps:
+    - name: cm-show-full-env
+      image: ubuntu
+      envFrom:
         - name: ibm-build-number
           valueFrom:
             fieldRef:
@@ -261,10 +314,11 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.annotations['devops.cloud.ibm.com/tekton-pipeline']
+        - configMapRef:
+            name: environment-properties
+        - secretRef:
+            name: secure-properties     
       command: ["/bin/bash", "-c"]
       args:
-        - |
+        - echo -e "00 The environment for this Step is ";
           env
-          echo 06 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
-          echo echo $API_KEY | od -a
-          echo done
