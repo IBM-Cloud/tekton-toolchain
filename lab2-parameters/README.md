@@ -80,7 +80,7 @@ There area also some handy properties that may help you out.  Check out the docs
 To see this in action in the GUI click on **Environment Properties**
 - add **Text property** `var` with a value like `defined in environment properties`
 - add **Text area property** `textarea` with a value like `text area with some new lines`
-- add **Secure property area property** `apikey` with a value like `very secure`
+- add **Secure property area property** `apikey` with a value like `veryprivate`
 - **Save**
 - **Run Pipeline** with the trigger **user-defined-variable**.
 

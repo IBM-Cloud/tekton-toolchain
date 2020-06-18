@@ -1,3 +1,133 @@
+# ibm
+apiVersion: tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: n010-task-environment
+spec:
+  triggers:
+    - binding:
+        name: simple-binding
+      template:
+        name: trigger-pipeline-task-environment
+---
+apiVersion: tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: trigger-pipeline-task-environment
+spec:
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: pipelinerun-$(uid)
+      spec:
+        pipelineRef:
+          name: pipeline-task-environment
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pipeline-task-environment
+spec:
+  tasks:
+    - name: pdv
+      taskRef:
+        name: task-task-environment
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: task-task-environment
+spec:
+  steps:
+    - name: individualpropertiesandsecureproperty
+      image: ubuntu
+      env:
+        - name: NAMEapikey
+          valueFrom:
+            secretKeyRef:
+              name: secure-properties
+              key: apikey
+        - name: NAMEvar
+          valueFrom:
+            configMapKeyRef:
+              name: environment-properties
+              key: var  
+        - name: NAMEtextarea
+          valueFrom:
+            configMapKeyRef:
+              name: environment-properties
+              key: textarea  
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          env
+          echo $NAMEapikey | od -a
+          echo "$NAMEtextarea" | od -a
+    - name: allproperties
+      image: ubuntu
+      envFrom:
+        - configMapRef:
+            name: environment-properties
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          env
+    - name: allsecretproperties
+      image: ubuntu
+      envFrom:
+        - secretRef:
+            name: secure-properties     
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x
+          env
+          echo $apikey | od -a
+    - name: annotations
+      image: ubuntu
+      env:
+        - name: ibm-build-number
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
+        - name: ibm-listener
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/listener']
+        - name: ibm-pipeline-id
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-id']
+        - name: ibm-trigger-name
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/trigger-name']
+        - name: ibm-trigger-type
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/trigger-type']
+        - name: ibm-triggered-by
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/triggered-by']
+        - name: ibm-pipeline-run-url
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-run-url']
+        - name: ibm-tekton-pipeline
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/tekton-pipeline']
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          echo 00 annotations
+          env
+
+---
 # no parameter use default
 apiVersion: tekton.dev/v1beta1
 kind: EventListener
@@ -236,133 +366,3 @@ spec:
           echo 06 lab2 Secret resource named secret-object key secret_key in env API_KEY: $API_KEY
           echo echo $API_KEY | od -a
           echo done
----
-# ibm
-apiVersion: tekton.dev/v1beta1
-kind: EventListener
-metadata:
-  name: ibm-task
-spec:
-  triggers:
-    - binding:
-        name: simple-binding
-      template:
-        name: trigger-pipeline-ibm
----
-apiVersion: tekton.dev/v1beta1
-kind: TriggerTemplate
-metadata:
-  name: trigger-pipeline-ibm
-spec:
-  resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        name: pipelinerun-$(uid)
-      spec:
-        pipelineRef:
-          name: pipeline-ibm
----
-apiVersion: tekton.dev/v1beta1
-kind: Pipeline
-metadata:
-  name: pipeline-ibm
-spec:
-  tasks:
-    - name: pdv
-      taskRef:
-        name: task-ibm
----
-apiVersion: tekton.dev/v1beta1
-kind: Task
-metadata:
-  name: task-ibm
-spec:
-  steps:
-    - name: individualpropertiesandsecureproperty
-      image: ubuntu
-      env:
-        - name: NAMEapikey
-          valueFrom:
-            secretKeyRef:
-              name: secure-properties
-              key: apikey
-        - name: NAMEvar
-          valueFrom:
-            configMapKeyRef:
-              name: environment-properties
-              key: var  
-        - name: NAMEtextarea
-          valueFrom:
-            configMapKeyRef:
-              name: environment-properties
-              key: textarea  
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          set -x
-          env
-          echo $NAMEapikey | od -a
-          echo "$NAMEtextarea" | od -a
-    - name: allproperties
-      image: ubuntu
-      envFrom:
-        - configMapRef:
-            name: environment-properties
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          set -x
-          env
-    - name: allsecretproperties
-      image: ubuntu
-      envFrom:
-        - secretRef:
-            name: secure-properties     
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          set -x
-          env
-          echo $apikey | od -a
-    - name: annotations
-      image: ubuntu
-      env:
-        - name: ibm-build-number
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']
-        - name: ibm-listener
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/listener']
-        - name: ibm-pipeline-id
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-id']
-        - name: ibm-trigger-name
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/trigger-name']
-        - name: ibm-trigger-type
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/trigger-type']
-        - name: ibm-triggered-by
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/triggered-by']
-        - name: ibm-pipeline-run-url
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/pipeline-run-url']
-        - name: ibm-tekton-pipeline
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/tekton-pipeline']
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          echo 00 annotations
-          env
-
